@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Equipment — SKY DJ & EVENT MANAGEMENT</title>
+  <meta name="description" content="Browse available sound systems, lighting gear, and event equipment from SKY DJ & EVENT MANAGEMENT.">
+  <link rel="icon" type="image/png" href="./images/logo.png">
+  <link rel="stylesheet" href="./css/style.css">
+  <link rel="stylesheet" href="./css/responsive.css">
+</head>
+<body>
+
+<!-- Header -->
+<header class="site-header" id="siteHeader">
+  <div class="container nav-container">
+    <a href="index.html" class="brand-logo">
+      <img src="./images/logo.png" alt="SKY DJ Logo" class="logo-img-nav">
+      <div class="brand-text-nav">
+        <span class="brand-name-nav"><span class="sky-text">SKY</span> DJ &amp; EVENT MANAGEMENT</span>
+        <span class="brand-tag-nav">DJ • Sound • Lighting • Stage • Events</span>
+      </div>
+    </a>
+    <nav class="nav-links">
+      <a href="index.html" class="nav-link">HOME</a>
+      <a href="products.html" class="nav-link active">EQUIPMENT</a>
+      <a href="login.html" class="nav-link nav-login-btn">LOGIN</a>
+    </nav>
+    <div style="display:flex;align-items:center;gap:14px;">
+      <a href="enquiry.html" class="btn btn-gold btn-sm">GET A QUOTATION</a>
+      <button class="hamburger-btn" id="hamburgerBtn" aria-label="Open menu">☰</button>
+    </div>
+  </div>
+</header>
+
+<!-- Mobile Nav -->
+<div class="mobile-nav-overlay" id="mobileNavOverlay"></div>
+<div class="mobile-nav-drawer" id="mobileNavDrawer">
+  <div class="mobile-drawer-header">
+    <img src="./images/logo.png" alt="SKY DJ" style="width:44px;height:44px;border-radius:50%;object-fit:cover;border:1px solid rgba(212,160,23,0.4);">
+    <button class="mobile-nav-close" id="mobileNavClose">&times;</button>
+  </div>
+  <div class="mobile-nav-links">
+    <a href="index.html" class="mobile-nav-link">HOME</a>
+    <a href="products.html" class="mobile-nav-link active">EQUIPMENT</a>
+    <a href="login.html" class="mobile-nav-link mobile-nav-login-btn">LOGIN</a>
+    <div style="padding:16px;"><a href="enquiry.html" class="btn btn-gold" style="width:100%;">GET A QUOTATION</a></div>
+  </div>
+</div>
+
+<main>
+
+<!-- Page Hero -->
+<section style="padding:70px 0 36px;text-align:center;background:linear-gradient(to bottom,#080a10 0%,var(--black-deep) 100%);">
+  <div class="container">
+    <span class="section-eyebrow reveal">🎛 Equipment Catalogue</span>
+    <h1 class="section-heading reveal" style="margin-top:10px;">Available Equipment</h1>
+    <div class="gold-divider reveal"></div>
+    <p class="section-subtext reveal">Real equipment managed by SKY DJ &amp; EVENT MANAGEMENT.</p>
+  </div>
+</section>
+
+<!-- Filter & Search -->
+<section class="section" style="padding-top:10px;">
+  <div class="container">
+
+    <div class="filter-bar reveal">
+      <div class="filter-chips" id="categoryChips">
+        <button class="chip-btn active" data-category="all" id="catAll">All Items</button>
+      </div>
+      <div class="search-box">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="productSearch" placeholder="Search equipment…" aria-label="Search products">
+      </div>
+    </div>
+
+    <!-- Equipment Cards Grid -->
+    <div class="card-grid" id="fullProductsGrid"></div>
+
+  </div>
+</section>
+
+</main>
+
+<!-- Footer -->
+<footer class="site-footer">
+  <div class="container" style="text-align:center; padding:36px 20px;">
+    <img src="./images/logo.png" alt="SKY DJ Logo" style="width:48px; height:48px; border-radius:50%; margin:0 auto 12px auto; border:1px solid var(--gold-primary);">
+    <p class="brand-name-nav" style="margin-bottom:6px; color:#fff;">
+      <span class="sky-text">SKY</span> DJ &amp; EVENT MANAGEMENT
+    </p>
+    <p style="color:var(--gold-bright); font-size:0.85rem; margin-bottom:16px;">
+      DJ • Sound • Lighting • Stage • Events
+    </p>
+    <div style="display:flex; justify-content:center; gap:20px; font-size:0.88rem; margin-bottom:16px;">
+      <a href="index.html" style="color:var(--text-muted);">Home</a>
+      <a href="products.html" style="color:var(--text-muted);">Equipment</a>
+      <a href="enquiry.html" style="color:var(--text-muted);">Get a Quotation</a>
+      <a href="login.html" style="color:var(--text-muted);">Login</a>
+    </div>
+    <div style="color:var(--text-dim); font-size:0.8rem; border-top:1px solid var(--black-border); padding-top:14px;">
+      © SKY DJ &amp; EVENT MANAGEMENT. All rights reserved.
+    </div>
+  </div>
+</footer>
+
+<script type="module" src="./js/app.js"></script>
+<script type="module" src="./js/products.js"></script>
+</body>
+</html>
