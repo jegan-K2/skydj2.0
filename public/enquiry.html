@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Get a Quotation | SKY DJ & EVENT MANAGEMENT</title>
+  <meta name="description" content="Request a customized quotation for DJ setups, sound systems, stage lighting, and event management.">
+  <link rel="icon" type="image/png" href="./images/logo.png">
+  <link rel="stylesheet" href="./css/style.css">
+  <link rel="stylesheet" href="./css/responsive.css">
+</head>
+<body>
+
+  <!-- Site Header -->
+  <header class="site-header" id="siteHeader">
+    <div class="container nav-container">
+      <a href="index.html" class="brand-logo">
+        <img src="./images/logo.png" alt="SKY DJ Logo" class="logo-img-nav">
+        <div class="brand-text-nav">
+          <span class="brand-name-nav"><span class="sky-text">SKY</span> DJ &amp; EVENT MANAGEMENT</span>
+          <span class="brand-tag-nav">DJ • Sound • Lighting • Stage • Events</span>
+        </div>
+      </a>
+
+      <!-- Desktop Nav -->
+      <nav class="nav-links">
+        <a href="index.html" class="nav-link">HOME</a>
+        <a href="products.html" class="nav-link">EQUIPMENT</a>
+        <a href="login.html" class="nav-link nav-login-btn">LOGIN</a>
+      </nav>
+
+      <div class="nav-actions">
+        <a href="enquiry.html" class="btn btn-gold btn-sm">GET A QUOTATION</a>
+        <button class="hamburger-btn" id="hamburgerBtn" aria-label="Toggle navigation">☰</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile Nav Drawer -->
+  <div class="mobile-nav-overlay" id="mobileNavOverlay"></div>
+  <div class="mobile-nav-drawer" id="mobileNavDrawer">
+    <div class="mobile-drawer-header">
+      <img src="./images/logo.png" alt="SKY DJ" style="width:44px;height:44px;border-radius:50%;object-fit:cover;border:1px solid rgba(212,160,23,0.4);">
+      <button class="mobile-nav-close" id="mobileNavClose">&times;</button>
+    </div>
+    <div class="mobile-nav-links">
+      <a href="index.html" class="mobile-nav-link">HOME</a>
+      <a href="products.html" class="mobile-nav-link">EQUIPMENT</a>
+      <a href="login.html" class="mobile-nav-link mobile-nav-login-btn">LOGIN</a>
+      <div style="padding:16px;">
+        <a href="enquiry.html" class="btn btn-gold" style="width:100%;">GET A QUOTATION</a>
+      </div>
+    </div>
+  </div>
+
+  <main style="padding: 60px 0 90px;">
+    <div class="container" style="max-width: 820px;">
+      <div class="section-header" style="text-align: center;">
+        <span class="section-eyebrow">📋 Event Requirements</span>
+        <h1 class="section-heading" style="margin-top: 8px;">Request a Quotation</h1>
+        <div class="gold-divider"></div>
+        <p class="section-subtext">Tell us your event date, venue, and required gear — we will prepare an exact quotation for your function.</p>
+      </div>
+
+      <div class="form-box" style="margin-top: 36px; background: var(--black-card); border: 1px solid var(--black-border); border-radius: var(--r-xl); padding: 36px;">
+        <div id="enquirySuccessMessage" style="display: none; background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: var(--r-md); padding: 20px; margin-bottom: 28px; text-align: center; color: #10b981;">
+          <h3 style="font-size: 1.25rem; margin-bottom: 6px; font-family: var(--font-display);">✓ Quotation Request Sent!</h3>
+          <p style="font-size: 0.95rem; color: var(--text-cream);">Thank you for contacting <strong class="dyn-business-name">SKY DJ &amp; EVENT MANAGEMENT</strong>. Our manager will review your equipment requirements and contact you promptly.</p>
+        </div>
+
+        <form id="quotationForm">
+          <!-- Customer Info -->
+          <div style="margin-bottom: 24px;">
+            <h3 style="font-family: var(--font-display); font-size: 1.15rem; color: var(--gold-bright); margin-bottom: 16px; border-bottom: 1px solid var(--black-border); padding-bottom: 8px;">
+              1. Customer Information
+            </h3>
+
+            <div class="admin-form-row">
+              <div class="admin-form-group">
+                <label class="admin-form-label" for="customerName">Full Name *</label>
+                <input type="text" id="customerName" name="customerName" class="admin-form-control" placeholder="e.g. Anand" required>
+              </div>
+              <div class="admin-form-group">
+                <label class="admin-form-label" for="customerPhone">Phone Number (WhatsApp) *</label>
+                <input type="tel" id="customerPhone" name="customerPhone" class="admin-form-control" placeholder="+91 98765 43210" required>
+              </div>
+            </div>
+
+            <div class="admin-form-group">
+              <label class="admin-form-label" for="customerEmail">Email Address (Optional)</label>
+              <input type="email" id="customerEmail" name="customerEmail" class="admin-form-control" placeholder="client@example.com">
+            </div>
+          </div>
+
+          <!-- Function Info -->
+          <div style="margin-bottom: 24px;">
+            <h3 style="font-family: var(--font-display); font-size: 1.15rem; color: var(--gold-bright); margin-bottom: 16px; border-bottom: 1px solid var(--black-border); padding-bottom: 8px;">
+              2. Event Details
+            </h3>
+
+            <div class="admin-form-row">
+              <div class="admin-form-group">
+                <label class="admin-form-label" for="functionType">Function / Event Type *</label>
+                <select id="functionType" name="functionType" class="admin-form-control" required>
+                  <option value="">Select Function Type</option>
+                  <option value="Wedding">Wedding</option>
+                  <option value="Reception">Reception</option>
+                  <option value="Engagement">Engagement</option>
+                  <option value="Birthday Party">Birthday Party</option>
+                  <option value="Corporate Event">Corporate Event</option>
+                  <option value="Cultural / Festival">Cultural / Festival</option>
+                  <option value="Private Celebration">Private Celebration</option>
+                </select>
+              </div>
+
+              <div class="admin-form-group">
+                <label class="admin-form-label" for="functionDate">Function Date *</label>
+                <input type="date" id="functionDate" name="functionDate" class="admin-form-control" required>
+              </div>
+            </div>
+
+            <div class="admin-form-group">
+              <label class="admin-form-label" for="functionLocation">Function Location / Venue *</label>
+              <input type="text" id="functionLocation" name="functionLocation" class="admin-form-control" placeholder="e.g. Grand Palace Hall, Coimbatore" required>
+            </div>
+          </div>
+
+          <!-- Equipment & Message -->
+          <div style="margin-bottom: 24px;">
+            <h3 style="font-family: var(--font-display); font-size: 1.15rem; color: var(--gold-bright); margin-bottom: 16px; border-bottom: 1px solid var(--black-border); padding-bottom: 8px;">
+              3. Equipment &amp; Message
+            </h3>
+
+            <div class="admin-form-group">
+              <label class="admin-form-label" for="requiredEquipment">Required Equipment / Rental Items</label>
+              <input type="text" id="requiredEquipment" name="requiredEquipment" class="admin-form-control" placeholder="e.g. 2 Top Speakers, 1 Subwoofer, Cordless Mics, Stage Lights">
+            </div>
+
+            <div class="admin-form-group">
+              <label class="admin-form-label" for="quotationMessage">Requirements / Additional Message</label>
+              <textarea id="quotationMessage" name="message" class="admin-form-control" rows="4" placeholder="Tell us about your event schedule, crowd size, indoor or outdoor setting..."></textarea>
+            </div>
+          </div>
+
+          <div style="text-align: center; margin-top: 30px;">
+            <button type="submit" class="btn btn-gold btn-xl" id="submitQuotationBtn" style="width: 100%;">
+              Submit Quotation Request
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container" style="text-align:center; padding:36px 20px;">
+      <img src="./images/logo.png" alt="SKY DJ Logo" style="width:48px; height:48px; border-radius:50%; margin:0 auto 12px auto; border:1px solid var(--gold-primary);">
+      <p class="brand-name-nav" style="margin-bottom:6px; color:#fff;">
+        <span class="sky-text">SKY</span> DJ &amp; EVENT MANAGEMENT
+      </p>
+      <p style="color:var(--gold-bright); font-size:0.85rem; margin-bottom:16px;">
+        DJ • Sound • Lighting • Stage • Events
+      </p>
+      <div style="display:flex; justify-content:center; gap:20px; font-size:0.88rem; margin-bottom:16px;">
+        <a href="index.html" style="color:var(--text-muted);">Home</a>
+        <a href="products.html" style="color:var(--text-muted);">Equipment</a>
+        <a href="enquiry.html" style="color:var(--text-muted);">Get a Quotation</a>
+        <a href="login.html" style="color:var(--text-muted);">Login</a>
+      </div>
+      <div style="color:var(--text-dim); font-size:0.8rem; border-top:1px solid var(--black-border); padding-top:14px;">
+        © SKY DJ &amp; EVENT MANAGEMENT. All rights reserved.
+      </div>
+    </div>
+  </footer>
+
+  <script src="./js/app.js"></script>
+  <script>
+    // Pre-fill from URL query param (e.g. ?item=JBL+Speakers)
+    const params = new URLSearchParams(window.location.search);
+    const preItem = params.get("item");
+    if (preItem) {
+      const eqInput = document.getElementById("requiredEquipment");
+      if (eqInput) eqInput.value = preItem;
+    }
+
+    const form = document.getElementById("quotationForm");
+    if (form) {
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const btn = document.getElementById("submitQuotationBtn");
+
+        const name = form.customerName.value.trim();
+        const phone = form.customerPhone.value.trim();
+        const email = form.customerEmail.value.trim();
+        const functionType = form.functionType.value;
+        const functionDate = form.functionDate.value;
+        const location = form.functionLocation.value.trim();
+        const requiredEquipment = form.requiredEquipment.value.trim();
+        const message = form.message.value.trim();
+
+        if (!name || !phone || !functionType || !functionDate || !location) {
+          showToast("Please fill in all required fields.", "error");
+          return;
+        }
+
+        const cleanPhone = phone.replace(/[\s\-\(\)]/g, "");
+        const indianPhoneRegex = /^(?:\+91|91|0)?[6-9]\d{9}$/;
+        if (!indianPhoneRegex.test(cleanPhone)) {
+          showToast("Please enter a valid Indian mobile number (e.g. 9876543210 or +91 98765 43210).", "error");
+          return;
+        }
+
+        btn.disabled = true;
+        btn.textContent = "Submitting Quotation Request...";
+
+        try {
+          const resp = await fetch("/api/quotations", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              name,
+              phone,
+              email: email || "",
+              functionType,
+              eventDate: functionDate,
+              location,
+              requiredEquipment: requiredEquipment || "",
+              message: message || ""
+            })
+          });
+
+          const data = await resp.json();
+          if (!data.success) throw new Error(data.message || "Submission failed.");
+
+          form.reset();
+          const successBox = document.getElementById("enquirySuccessMessage");
+          if (successBox) {
+            successBox.style.display = "block";
+            successBox.scrollIntoView({ behavior: "smooth" });
+          }
+          showToast("Quotation request sent successfully!", "success");
+        } catch (err) {
+          showToast("Submission failed: " + err.message, "error");
+        } finally {
+          btn.disabled = false;
+          btn.textContent = "Submit Quotation Request";
+        }
+      });
+    }
+  </script>
+</body>
+</html>

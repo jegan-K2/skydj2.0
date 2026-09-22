@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Portal | SKY DJ & EVENT MANAGEMENT</title>
+  <meta name="description" content="Admin login for SKY DJ & EVENT MANAGEMENT business portal.">
+  <link rel="icon" type="image/png" href="./images/logo.png">
+  <link rel="stylesheet" href="./css/style.css">
+  <link rel="stylesheet" href="./css/responsive.css">
+  <link rel="stylesheet" href="./css/admin.css">
+</head>
+<body style="background: radial-gradient(circle at 50% 30%, #151a27 0%, #080a0e 100%); min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px;">
+
+  <div class="form-box" style="width: 100%; max-width: 440px; padding: 40px; box-shadow: var(--shadow-heavy); border: 1px solid var(--black-border); background: var(--black-card); border-radius: var(--r-xl);">
+    
+    <!-- Brand Logo -->
+    <div style="text-align: center; margin-bottom: 28px;">
+      <a href="index.html">
+        <img src="./images/logo.png" alt="SKY DJ Logo" style="width: 68px; height: 68px; border-radius: 50%; border: 2px solid var(--gold-primary); margin: 0 auto 14px auto; box-shadow: 0 0 16px rgba(212,160,23,0.3);">
+      </a>
+      <h1 style="font-size: 1.45rem; margin-bottom: 6px; font-family: var(--font-display); color: #fff;">
+        ADMIN PORTAL
+      </h1>
+      <p style="color: var(--text-muted); font-size: 0.88rem;">
+        SKY DJ &amp; EVENT MANAGEMENT
+      </p>
+    </div>
+
+    <!-- Error Alert Box -->
+    <div id="loginErrorBox" style="display: none; background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: var(--radius-sm); padding: 12px; margin-bottom: 20px; font-size: 0.88rem; color: #ef4444; line-height: 1.4;"></div>
+
+    <form id="adminLoginForm">
+      <div class="form-group" style="margin-bottom: 18px;">
+        <label class="form-label" for="adminEmail" style="display: block; font-size: 0.88rem; margin-bottom: 6px; color: var(--text-muted);">Email</label>
+        <input type="email" id="adminEmail" name="email" class="admin-form-control" placeholder="Enter your email" required autocomplete="email">
+      </div>
+
+      <div class="form-group" style="margin-bottom: 20px;">
+        <label class="form-label" for="adminPassword" style="display: block; font-size: 0.88rem; margin-bottom: 6px; color: var(--text-muted);">Password</label>
+        <input type="password" id="adminPassword" name="password" class="admin-form-control" placeholder="••••••••" required autocomplete="current-password">
+      </div>
+
+      <button type="submit" class="btn btn-gold" style="width: 100%; padding: 12px; font-weight: 700;">
+        SIGN IN
+      </button>
+    </form>
+
+    <div style="display: flex; justify-content: center; align-items: center; margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--black-border); font-size: 0.85rem;">
+      <a href="login.html" style="color: var(--gold-primary);">
+        ← Choose Role
+      </a>
+    </div>
+  </div>
+
+  <script src="./js/app.js"></script>
+  <script>
+    const form = document.getElementById("adminLoginForm");
+    const errorBox = document.getElementById("loginErrorBox");
+
+    if (form) {
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        if (errorBox) errorBox.style.display = "none";
+
+        const email = form.email.value.trim();
+        const password = form.password.value;
+        const btn = form.querySelector("button[type='submit']");
+
+        btn.disabled = true;
+        btn.textContent = "Verifying credentials...";
+
+        try {
+          const resp = await fetch("/api/auth/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email, password })
+          });
+
+          const data = await resp.json();
+
+          if (!data.success) {
+            throw new Error(data.message || "Invalid email or password.");
+          }
+
+          // Verify admin role
+          if (data.user.role !== "admin") {
+            throw new Error("Access Denied: You do not have administrator permissions.");
+          }
+
+          // Store JWT token and user info
+          if (window.setAuth) {
+            window.setAuth(data.token, data.user);
+          } else {
+            localStorage.setItem("sky_auth_token", data.token);
+            localStorage.setItem("sky_auth_user", JSON.stringify(data.user));
+          }
+
+          window.location.href = "admin-dashboard.html";
+        } catch (err) {
+          console.error("Admin sign-in error:", err);
+          if (errorBox) {
+            errorBox.textContent = err.message || "Invalid email or password.";
+            errorBox.style.display = "block";
+          }
+        } finally {
+          btn.disabled = false;
+          btn.textContent = "SIGN IN";
+        }
+      });
+    }
+  </script>
+</body>
+</html>

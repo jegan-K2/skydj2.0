@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SKY DJ & EVENT MANAGEMENT | DJ • Sound • Lighting • Stage • Events</title>
+  <meta name="description" content="SKY DJ & EVENT MANAGEMENT — DJ • Sound • Lighting • Stage • Events. Premium event equipment rental and production in Tamil Nadu.">
+  <meta property="og:title" content="SKY DJ & EVENT MANAGEMENT">
+  <meta property="og:description" content="DJ • Sound • Lighting • Stage • Events">
+  <meta property="og:type" content="website">
+  <link rel="icon" type="image/png" href="./images/logo.png">
+  <link rel="stylesheet" href="./css/style.css">
+  <link rel="stylesheet" href="./css/responsive.css">
+  <style>
+    /* ─── Modern Review Grid ─── */
+    .review-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 24px;
+      margin-top: 36px;
+    }
+    .review-card-modern {
+      background: var(--black-surface);
+      border: 1px solid var(--black-border);
+      border-radius: var(--r-lg);
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: all var(--t-mid) var(--ease-smooth);
+      box-shadow: var(--shadow-card);
+    }
+    .review-card-modern:hover {
+      border-color: var(--gold-primary);
+      transform: translateY(-4px);
+    }
+    .review-img-wrap {
+      width: 100%;
+      height: 190px;
+      border-radius: var(--r-md);
+      overflow: hidden;
+      margin-bottom: 16px;
+      border: 1px solid rgba(212,160,23,0.2);
+    }
+    .review-img-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform var(--t-mid) var(--ease-smooth);
+    }
+    .review-card-modern:hover .review-img-wrap img {
+      transform: scale(1.04);
+    }
+
+    /* ─── Review Photo Preview ─── */
+    .photo-preview-container {
+      margin-top: 12px;
+      position: relative;
+      display: inline-block;
+    }
+    .photo-preview-container img {
+      width: 120px;
+      height: 90px;
+      object-fit: cover;
+      border-radius: var(--r-sm);
+      border: 1px solid var(--gold-primary);
+    }
+    .photo-preview-remove {
+      position: absolute;
+      top: -8px;
+      right: -8px;
+      background: #ef4444;
+      color: #fff;
+      border: none;
+      border-radius: 50%;
+      width: 22px;
+      height: 22px;
+      cursor: pointer;
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.5);
+    }
+
+    /* ─── State Message ─── */
+    .state-box {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 36px 20px;
+      color: var(--text-muted);
+      border: 1px dashed rgba(212,160,23,0.25);
+      border-radius: var(--r-md);
+      background: rgba(0,0,0,0.2);
+    }
+  </style>
+</head>
+<body>
+
+<!-- ━━━ LOADING SCREEN ━━━ -->
+<div id="loadingScreen">
+  <img src="./images/logo.png" alt="SKY DJ &amp; EVENT MANAGEMENT Official Logo" class="loading-logo">
+  <div class="loading-brand">SKY DJ &amp; EVENT MANAGEMENT</div>
+  <div class="loading-sub">DJ • Sound • Lighting • Stage • Events</div>
+  <div class="loading-waveform">
+    <div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div>
+    <div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div>
+    <div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div>
+    <div class="wave-bar"></div>
+  </div>
+  <div class="loading-dots">
+    <span></span><span></span><span></span>
+  </div>
+</div>
+
+<!-- ━━━ 1. SITE HEADER ━━━ -->
+<header class="site-header" id="siteHeader">
+  <div class="container nav-container">
+    <a href="index.html" class="brand-logo">
+      <img src="./images/logo.png" alt="SKY DJ Logo" class="logo-img-nav">
+      <div class="brand-text-nav">
+        <span class="brand-name-nav">
+          <span class="sky-text">SKY</span> DJ &amp; EVENT MANAGEMENT
+        </span>
+        <span class="brand-tag-nav">DJ • Sound • Lighting • Stage • Events</span>
+      </div>
+    </a>
+
+    <!-- Top Navigation Menu -->
+    <nav class="nav-links">
+      <a href="index.html" class="nav-link active">HOME</a>
+      <a href="products.html" class="nav-link">EQUIPMENT</a>
+      <a href="login.html" class="nav-link nav-login-btn">LOGIN</a>
+    </nav>
+
+    <div class="nav-actions" style="display:flex;align-items:center;gap:14px;">
+      <a href="enquiry.html" class="btn btn-gold btn-sm">GET A QUOTATION</a>
+      <button class="hamburger-btn" id="hamburgerBtn" aria-label="Open menu">☰</button>
+    </div>
+  </div>
+</header>
+
+<!-- ━━━ MOBILE NAV DRAWER ━━━ -->
+<div class="mobile-nav-overlay" id="mobileNavOverlay"></div>
+<div class="mobile-nav-drawer" id="mobileNavDrawer">
+  <div class="mobile-drawer-header">
+    <img src="./images/logo.png" alt="SKY DJ" style="width:44px;height:44px;border-radius:50%;object-fit:cover;border:1px solid rgba(212,160,23,0.4);">
+    <button class="mobile-nav-close" id="mobileNavClose" aria-label="Close menu">&times;</button>
+  </div>
+  <div class="mobile-nav-links">
+    <a href="index.html" class="mobile-nav-link active">HOME</a>
+    <a href="products.html" class="mobile-nav-link">EQUIPMENT</a>
+    <a href="login.html" class="mobile-nav-link mobile-nav-login-btn">LOGIN</a>
+    <div style="padding:16px;">
+      <a href="enquiry.html" class="btn btn-gold" style="width:100%;">GET A QUOTATION</a>
+    </div>
+  </div>
+</div>
+
+<main>
+
+  <!-- ━━━ 2. HERO / BRAND SECTION ━━━ -->
+  <section class="hero-section">
+    <canvas id="heroCanvas"></canvas>
+    <div class="hero-bg-glow"></div>
+
+    <div class="hero-content">
+      <!-- Official Logo with Circular Gold Rings -->
+      <div class="hero-logo-wrapper">
+        <div class="hero-logo-ring hero-logo-ring-1"></div>
+        <div class="hero-logo-ring hero-logo-ring-2"></div>
+        <img src="./images/logo.png" alt="Official SKY DJ &amp; EVENT MANAGEMENT Logo" class="hero-logo">
+      </div>
+
+      <!-- Brand Name -->
+      <h1 class="hero-title">
+        <span class="shine-text">SKY DJ</span><br>
+        <span style="font-size:0.55em;font-weight:600;letter-spacing:0.08em;color:var(--text-cream);">&amp; EVENT MANAGEMENT</span>
+      </h1>
+
+      <!-- Tagline -->
+      <p class="hero-subtitle" style="letter-spacing:0.12em;font-weight:600;color:var(--gold-bright);">
+        DJ • Sound • Lighting • Stage • Events
+      </p>
+
+      <!-- Main Action Buttons Navigating to Dedicated Pages -->
+      <div class="hero-cta-group">
+        <a href="products.html" class="btn btn-gold btn-xl">Browse Equipment</a>
+        <a href="enquiry.html" class="btn btn-outline-gold btn-xl">Get a Quotation</a>
+      </div>
+
+      <!-- Subtle Equalizer Waveform Animation -->
+      <div class="hero-equalizer" aria-hidden="true">
+        <div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div>
+        <div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div>
+        <div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div>
+        <div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div>
+        <div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div>
+      </div>
+    </div>
+
+    <div class="scroll-indicator" aria-hidden="true">
+      <div class="scroll-mouse"></div>
+      <span class="scroll-text">Scroll to explore</span>
+    </div>
+  </section>
+
+  <div class="gold-line"></div>
+
+  <!-- ━━━ 3. CLIENT REVIEWS SECTION (Publicly Visible Approved Reviews) ━━━ -->
+  <section class="section" id="reviewsSection">
+    <div class="container">
+      <div class="section-header reveal">
+        <span class="section-eyebrow">⭐ Client Feedback</span>
+        <h2 class="section-heading">CLIENT REVIEWS</h2>
+        <div class="gold-divider"></div>
+        <p class="section-subtext">Real experiences shared by clients of SKY DJ &amp; EVENT MANAGEMENT.</p>
+      </div>
+
+      <!-- Approved Reviews Container (Visible to all public visitors without login) -->
+      <div id="homeReviewsContainer" class="review-grid reveal">
+        <div class="state-box">Loading reviews...</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ━━━ 4. YOUR REVIEW SECTION (Immediately Following Approved Reviews) ━━━ -->
+  <section class="section" id="yourReviewSection" style="padding-top: 10px; padding-bottom: 70px;">
+    <div class="container" style="text-align: center;">
+      <div style="max-width: 600px; margin: 0 auto; padding: 36px 24px; background: var(--black-surface); border: 1px solid var(--black-border); border-radius: var(--r-xl); box-shadow: var(--shadow-card);" class="reveal">
+        <span class="section-eyebrow" style="margin-bottom: 8px; display: inline-block;">✨ Share Your Feedback</span>
+        <h3 style="font-family: var(--font-display); font-size: 1.6rem; color: #fff; margin-bottom: 8px;">
+          YOUR REVIEW
+        </h3>
+        <div class="gold-divider" style="margin: 12px auto 16px auto;"></div>
+        <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 28px;">
+          Share your experience with SKY DJ.
+        </p>
+        <!-- The ONLY visible Add Your Review button on the homepage -->
+        <button type="button" class="btn btn-gold btn-lg" id="openReviewModalBtn">
+          ADD YOUR REVIEW
+        </button>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ━━━ CLIENT REVIEW SUBMISSION MODAL ━━━ -->
+<div class="modal-overlay" id="homeReviewModal">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h3 class="modal-title">Add Your Review</h3>
+      <button type="button" class="modal-close-btn" id="homeReviewClose">&times;</button>
+    </div>
+    
+    <div class="modal-body">
+      <!-- Review Form for Authenticated Clients -->
+      <form id="homeReviewForm">
+        <div class="admin-form-group">
+          <label class="admin-form-label" for="reviewCustomerName">Name *</label>
+          <input type="text" name="name" id="reviewCustomerName" class="admin-form-control" placeholder="Your name" required>
+        </div>
+
+        <div class="admin-form-group">
+          <label class="admin-form-label" for="reviewFunctionType">Function Type *</label>
+          <select name="functionType" id="reviewFunctionType" class="admin-form-control" required>
+            <option value="">Select Function Type</option>
+            <option value="Wedding">Wedding</option>
+            <option value="Reception">Reception</option>
+            <option value="Birthday Party">Birthday Party</option>
+            <option value="Engagement">Engagement</option>
+            <option value="Corporate Event">Corporate Event</option>
+            <option value="Cultural / Festival">Cultural / Festival</option>
+            <option value="Other Celebration">Other Celebration</option>
+          </select>
+        </div>
+
+        <div class="admin-form-group">
+          <label class="admin-form-label" for="reviewFeedback">Feedback / Review *</label>
+          <textarea name="feedback" id="reviewFeedback" class="admin-form-control" rows="4" placeholder="Share your experience with SKY DJ sound, lighting, or event management..." required></textarea>
+        </div>
+
+        <div class="admin-form-group">
+          <label class="admin-form-label" for="reviewPhotoInput">Event Photo</label>
+          <input type="file" name="eventPhoto" id="reviewPhotoInput" class="admin-form-control" accept="image/jpeg,image/png,image/webp">
+          <span style="font-size:0.75rem; color:var(--text-dim); display:block; margin-top:4px;">Allowed: JPG, JPEG, PNG, WEBP (Max 5MB).</span>
+          
+          <!-- Review Image Preview Container -->
+          <div id="reviewPhotoPreviewWrap" style="display: none; margin-top: 12px;">
+            <div class="photo-preview-container">
+              <img id="reviewPhotoPreviewImg" src="" alt="Photo preview">
+              <button type="button" class="photo-preview-remove" id="reviewPhotoRemoveBtn" title="Remove photo">&times;</button>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top:24px; display:flex; justify-content:flex-end; gap:12px;">
+          <button type="button" class="btn btn-outline-gold" id="cancelReviewBtn">Cancel</button>
+          <button type="submit" class="btn btn-gold" id="submitReviewBtn">SUBMIT REVIEW</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- ━━━ 5. FOOTER ━━━ -->
+<footer class="site-footer">
+  <div class="container" style="text-align: center; padding: 36px 20px;">
+    <img src="./images/logo.png" alt="SKY DJ Logo" style="width: 54px; height: 54px; border-radius: 50%; margin: 0 auto 14px auto; border: 1px solid var(--gold-primary);">
+    <p class="brand-name-nav" style="margin-bottom: 6px; font-size: 1.1rem; color: #fff;">
+      <span class="sky-text">SKY</span> DJ &amp; EVENT MANAGEMENT
+    </p>
+    <p style="color: var(--gold-bright); font-size: 0.88rem; margin-bottom: 18px; letter-spacing: 0.06em;">
+      DJ • Sound • Lighting • Stage • Events
+    </p>
+
+    <div style="display: flex; justify-content: center; gap: 24px; margin-bottom: 20px; font-size: 0.9rem;">
+      <a href="index.html" style="color: var(--text-muted);">Home</a>
+      <a href="products.html" style="color: var(--text-muted);">Equipment</a>
+      <a href="enquiry.html" style="color: var(--text-muted);">Get a Quotation</a>
+      <a href="login.html" style="color: var(--text-muted);">Login</a>
+    </div>
+
+    <div style="color: var(--text-dim); font-size: 0.82rem; border-top: 1px solid var(--black-border); padding-top: 16px;">
+      © <span id="footerYear"></span> SKY DJ &amp; EVENT MANAGEMENT. All rights reserved.
+    </div>
+  </div>
+</footer>
+
+<!-- ━━━ SCRIPTS ━━━ -->
+<script src="./js/app.js"></script>
+<script>
+  // Footer Year
+  const footerYear = document.getElementById("footerYear");
+  if (footerYear) footerYear.textContent = new Date().getFullYear();
+
+  // Loading Screen
+  window.addEventListener("load", () => {
+    setTimeout(() => {
+      const ls = document.getElementById("loadingScreen");
+      if (ls) ls.classList.add("hidden");
+    }, 1200);
+  });
+
+  /* ─────────────────────────────────────────────────────────────
+     1. LOAD APPROVED CLIENT REVIEWS (PUBLIC — NO LOGIN REQUIRED)
+     ───────────────────────────────────────────────────────────── */
+  async function loadHomeReviews() {
+    const container = document.getElementById("homeReviewsContainer");
+    if (!container) return;
+
+    try {
+      const resp = await fetch("/api/reviews");
+      const data = await resp.json();
+
+      if (!data.success || !data.data || data.data.length === 0) {
+        container.innerHTML = `
+          <div class="state-box">
+            <div style="font-size: 1.8rem; margin-bottom: 8px;">⭐</div>
+            <h4 style="color: var(--gold-bright); font-size: 1.1rem; margin-bottom: 6px;">No Customer Reviews Yet</h4>
+            <p style="color: var(--text-muted); font-size: 0.9rem;">Be the first client to share your event experience with SKY DJ &amp; EVENT MANAGEMENT!</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = data.data.map(r => {
+        const photo = r.imageUrl || "";
+        const customer = r.name || "Client";
+        const fType = r.functionType || "Event";
+        const text = r.feedback || "";
+
+        return `
+          <div class="review-card-modern">
+            ${photo ? `
+              <div class="review-img-wrap">
+                <img src="${escapeHtml(photo)}" alt="Event Photo by ${escapeHtml(customer)}" loading="lazy">
+              </div>
+            ` : ''}
+            <div>
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                <h4 style="font-family:var(--font-display); font-size:1.15rem; color:var(--text-white);">${escapeHtml(customer)}</h4>
+              </div>
+              <div style="display:inline-block; font-size:0.75rem; color:var(--gold-primary); background:rgba(212,160,23,0.1); padding:2px 8px; border-radius:4px; margin-bottom:12px; font-weight:600;">
+                ${escapeHtml(fType)}
+              </div>
+              <p style="color:var(--text-muted); font-size:0.92rem; line-height:1.6; font-style:italic;">
+                "${escapeHtml(text)}"
+              </p>
+            </div>
+          </div>
+        `;
+      }).join("");
+
+    } catch (err) {
+      console.error("loadHomeReviews error:", err);
+      container.innerHTML = `<div class="state-box">Unable to load reviews. Please try again.</div>`;
+    }
+  }
+
+  loadHomeReviews();
+
+  /* ─────────────────────────────────────────────────────────────
+     2. YOUR REVIEW & SUBMISSION MODAL
+     (LOGIN REQUIRED ONLY FOR SUBMITTING REVIEWS)
+     ───────────────────────────────────────────────────────────── */
+  const reviewModal = document.getElementById("homeReviewModal");
+  const openReviewBtn = document.getElementById("openReviewModalBtn");
+  const closeReviewBtn = document.getElementById("homeReviewClose");
+  const cancelReviewBtn = document.getElementById("cancelReviewBtn");
+  const reviewForm = document.getElementById("homeReviewForm");
+  const nameInput = document.getElementById("reviewCustomerName");
+  const photoInput = document.getElementById("reviewPhotoInput");
+  const photoPreviewWrap = document.getElementById("reviewPhotoPreviewWrap");
+  const photoPreviewImg = document.getElementById("reviewPhotoPreviewImg");
+  const photoRemoveBtn = document.getElementById("reviewPhotoRemoveBtn");
+
+  let selectedReviewFile = null;
+
+  function openReviewFormModal() {
+    const storedUser = window.getStoredUser ? window.getStoredUser() : null;
+    if (nameInput && !nameInput.value && storedUser && storedUser.name) {
+      nameInput.value = storedUser.name;
+    }
+    if (reviewModal) reviewModal.classList.add("active");
+  }
+
+  if (openReviewBtn) {
+    openReviewBtn.addEventListener("click", () => {
+      if (!window.isLoggedIn || !window.isLoggedIn()) {
+        window.location.href = "login.html?redirect=index.html%23yourReviewSection";
+        return;
+      }
+      openReviewFormModal();
+    });
+  }
+
+  // Auto-open modal if returning from login with hash
+  if (window.location.hash === "#yourReviewSection") {
+    setTimeout(() => {
+      if (window.isLoggedIn && window.isLoggedIn()) {
+        openReviewFormModal();
+      }
+    }, 500);
+  }
+
+  if (closeReviewBtn) closeReviewBtn.addEventListener("click", () => reviewModal.classList.remove("active"));
+  if (cancelReviewBtn) cancelReviewBtn.addEventListener("click", () => reviewModal.classList.remove("active"));
+
+  // Live Image Preview before submission
+  if (photoInput) {
+    photoInput.addEventListener("change", () => {
+      if (photoInput.files && photoInput.files[0]) {
+        const file = photoInput.files[0];
+
+        const validTypes = ["image/jpeg", "image/png", "image/webp", "image/jpg"];
+        if (!validTypes.includes(file.type.toLowerCase())) {
+          alert("Please select a valid image file (JPG, JPEG, PNG, WEBP).");
+          photoInput.value = "";
+          selectedReviewFile = null;
+          photoPreviewWrap.style.display = "none";
+          return;
+        }
+
+        if (file.size > 5 * 1024 * 1024) {
+          alert("Image size must be less than 5MB.");
+          photoInput.value = "";
+          selectedReviewFile = null;
+          photoPreviewWrap.style.display = "none";
+          return;
+        }
+
+        selectedReviewFile = file;
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          photoPreviewImg.src = e.target.result;
+          photoPreviewWrap.style.display = "block";
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+  }
+
+  if (photoRemoveBtn) {
+    photoRemoveBtn.addEventListener("click", () => {
+      selectedReviewFile = null;
+      if (photoInput) photoInput.value = "";
+      if (photoPreviewImg) photoPreviewImg.src = "";
+      if (photoPreviewWrap) photoPreviewWrap.style.display = "none";
+    });
+  }
+
+  // Submit Review Form
+  if (reviewForm) {
+    reviewForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      if (!window.isLoggedIn || !window.isLoggedIn()) {
+        window.location.href = "login.html?redirect=index.html%23yourReviewSection";
+        return;
+      }
+
+      const submitBtn = document.getElementById("submitReviewBtn");
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Submitting Review...";
+
+      try {
+        const name = reviewForm.name.value.trim();
+        const functionType = reviewForm.functionType.value;
+        const feedback = reviewForm.feedback.value.trim();
+
+        if (!name || !functionType || !feedback) {
+          throw new Error("Please fill in all required fields.");
+        }
+
+        const formData = new FormData();
+        formData.append("name", name);
+        formData.append("functionType", functionType);
+        formData.append("feedback", feedback);
+
+        if (selectedReviewFile) {
+          formData.append("eventPhoto", selectedReviewFile);
+        }
+
+        const token = window.getAuthToken ? window.getAuthToken() : "";
+        const resp = await fetch("/api/reviews", {
+          method: "POST",
+          headers: { "Authorization": "Bearer " + token },
+          body: formData
+        });
+
+        const data = await resp.json();
+        if (!data.success) throw new Error(data.message || "Failed to submit review.");
+
+        reviewForm.reset();
+        selectedReviewFile = null;
+        if (photoPreviewWrap) photoPreviewWrap.style.display = "none";
+        reviewModal.classList.remove("active");
+        showToast("Review submitted successfully! It will appear on the homepage once approved by admin.", "success");
+
+      } catch (err) {
+        console.error("Review submission error:", err);
+        alert("Could not submit review: " + err.message);
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = "SUBMIT REVIEW";
+      }
+    });
+  }
+
+  /* ─────────────────────────────────────────────────────────────
+     3. HERO PARTICLE BACKGROUND CANVAS
+     ───────────────────────────────────────────────────────────── */
+  (function() {
+    const canvas = document.getElementById("heroCanvas");
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+
+    let W, H, particles = [];
+    const COUNT = 45;
+
+    function resize() {
+      W = canvas.width  = canvas.offsetWidth;
+      H = canvas.height = canvas.offsetHeight;
+    }
+
+    resize();
+    window.addEventListener("resize", resize, { passive: true });
+
+    class Particle {
+      constructor() { this.reset(); }
+      reset() {
+        this.x   = Math.random() * W;
+        this.y   = Math.random() * H;
+        this.r   = Math.random() * 1.5 + 0.3;
+        this.dx  = (Math.random() - 0.5) * 0.4;
+        this.dy  = -(Math.random() * 0.5 + 0.2);
+        this.a   = Math.random() * 0.7 + 0.15;
+        this.fade = Math.random() * 0.006 + 0.002;
+      }
+      draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(212,160,23,${this.a})`;
+        ctx.fill();
+      }
+      update() {
+        this.x += this.dx;
+        this.y += this.dy;
+        this.a -= this.fade;
+        if (this.a <= 0 || this.y < 0) this.reset();
+      }
+    }
+
+    for (let i = 0; i < COUNT; i++) particles.push(new Particle());
+
+    function animate() {
+      ctx.clearRect(0, 0, W, H);
+      particles.forEach(p => { p.update(); p.draw(); });
+      requestAnimationFrame(animate);
+    }
+    animate();
+  })();
+</script>
+</body>
+</html>

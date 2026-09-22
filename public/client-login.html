@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Client Portal | SKY DJ & EVENT MANAGEMENT</title>
+  <meta name="description" content="Client Sign In & Sign Up for SKY DJ & EVENT MANAGEMENT.">
+  <link rel="icon" type="image/png" href="./images/logo.png">
+  <link rel="stylesheet" href="./css/style.css">
+  <link rel="stylesheet" href="./css/responsive.css">
+  <style>
+    .auth-page-wrapper {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px;
+      background: radial-gradient(circle at 50% 30%, #151824 0%, #050507 90%);
+    }
+    .auth-box {
+      width: 100%;
+      max-width: 460px;
+      background: var(--black-card);
+      border: 1px solid var(--black-border);
+      border-radius: var(--r-xl);
+      padding: 40px 32px;
+      box-shadow: var(--shadow-heavy);
+      position: relative;
+    }
+    .auth-tabs {
+      display: flex;
+      border-bottom: 1px solid var(--black-border);
+      margin-bottom: 24px;
+    }
+    .auth-tab-btn {
+      flex: 1;
+      padding: 12px;
+      text-align: center;
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-weight: 700;
+      font-size: 0.95rem;
+      cursor: pointer;
+      position: relative;
+      transition: color var(--t-fast);
+    }
+    .auth-tab-btn.active {
+      color: var(--gold-bright);
+    }
+    .auth-tab-btn.active::after {
+      content: '';
+      position: absolute;
+      bottom: -1px; left: 0; right: 0;
+      height: 2px;
+      background: var(--gold-primary);
+    }
+    .alert-msg {
+      padding: 12px;
+      border-radius: var(--r-sm);
+      font-size: 0.85rem;
+      margin-bottom: 18px;
+      display: none;
+    }
+    .alert-err {
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid rgba(239, 68, 68, 0.4);
+      color: #ef4444;
+    }
+    .alert-suc {
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid rgba(16, 185, 129, 0.4);
+      color: #10b981;
+    }
+  </style>
+</head>
+<body>
+
+<div class="auth-page-wrapper">
+  <div class="auth-box">
+
+    <!-- Brand Header -->
+    <div style="text-align: center; margin-bottom: 24px;">
+      <a href="index.html">
+        <img src="./images/logo.png" alt="SKY DJ Logo" style="width: 64px; height: 64px; border-radius: 50%; border: 2px solid var(--gold-primary); margin: 0 auto 12px auto; box-shadow: 0 0 16px var(--gold-glow);">
+      </a>
+      <h1 style="font-family: var(--font-display); font-size: 1.45rem; color: #fff; margin-bottom: 4px;">
+        CLIENT PORTAL
+      </h1>
+      <p style="color: var(--text-muted); font-size: 0.85rem;">
+        SKY DJ &amp; EVENT MANAGEMENT
+      </p>
+    </div>
+
+    <!-- Alert Box -->
+    <div id="authAlert" class="alert-msg"></div>
+
+    <!-- Toggle Tabs: Sign In / Sign Up -->
+    <div class="auth-tabs">
+      <button type="button" class="auth-tab-btn active" id="tabSignInBtn">SIGN IN</button>
+      <button type="button" class="auth-tab-btn" id="tabSignUpBtn">SIGN UP</button>
+    </div>
+
+    <!-- ── SIGN IN FORM ── -->
+    <form id="signInForm">
+      <div class="admin-form-group">
+        <label class="admin-form-label" for="signInEmail">Email *</label>
+        <input type="email" id="signInEmail" name="email" class="admin-form-control" placeholder="name@example.com" required autocomplete="email">
+      </div>
+
+      <div class="admin-form-group">
+        <label class="admin-form-label" for="signInPassword">Password *</label>
+        <input type="password" id="signInPassword" name="password" class="admin-form-control" placeholder="••••••••" required autocomplete="current-password">
+      </div>
+
+      <button type="submit" class="btn btn-gold" style="width: 100%; margin-top: 10px; padding: 12px; font-weight: 700;">
+        SIGN IN
+      </button>
+    </form>
+
+    <!-- ── SIGN UP FORM ── -->
+    <form id="signUpForm" style="display: none;">
+      <div class="admin-form-group">
+        <label class="admin-form-label" for="signUpName">Name *</label>
+        <input type="text" id="signUpName" name="name" class="admin-form-control" placeholder="Your full name" required>
+      </div>
+
+      <div class="admin-form-group">
+        <label class="admin-form-label" for="signUpUsername">Username (Optional)</label>
+        <input type="text" id="signUpUsername" name="username" class="admin-form-control" placeholder="e.g. rahul99">
+      </div>
+
+      <div class="admin-form-group">
+        <label class="admin-form-label" for="signUpEmail">Email *</label>
+        <input type="email" id="signUpEmail" name="email" class="admin-form-control" placeholder="name@example.com" required autocomplete="email">
+      </div>
+
+      <div class="admin-form-group">
+        <label class="admin-form-label" for="signUpPassword">Password *</label>
+        <input type="password" id="signUpPassword" name="password" class="admin-form-control" placeholder="At least 6 characters" required autocomplete="new-password">
+      </div>
+
+      <button type="submit" class="btn btn-gold" style="width: 100%; margin-top: 10px; padding: 12px; font-weight: 700;">
+        SIGN UP
+      </button>
+    </form>
+
+    <!-- Footer Links -->
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 24px; padding-top: 18px; border-top: 1px solid var(--black-border); font-size: 0.85rem;">
+      <a href="login.html" style="color: var(--gold-primary);">
+        ← Choose Role
+      </a>
+      <a href="index.html" style="color: var(--text-muted);">
+        Return to Website
+      </a>
+    </div>
+
+  </div>
+</div>
+
+<script src="./js/app.js"></script>
+<script>
+  const tabSignIn = document.getElementById("tabSignInBtn");
+  const tabSignUp = document.getElementById("tabSignUpBtn");
+  const formSignIn = document.getElementById("signInForm");
+  const formSignUp = document.getElementById("signUpForm");
+  const alertBox = document.getElementById("authAlert");
+
+  function showAlert(msg, isSuccess) {
+    alertBox.textContent = msg;
+    alertBox.className = `alert-msg ${isSuccess ? 'alert-suc' : 'alert-err'}`;
+    alertBox.style.display = "block";
+  }
+
+  function clearAlert() {
+    alertBox.style.display = "none";
+  }
+
+  // Toggle Tab handling
+  tabSignIn.addEventListener("click", () => {
+    tabSignIn.classList.add("active");
+    tabSignUp.classList.remove("active");
+    formSignIn.style.display = "block";
+    formSignUp.style.display = "none";
+    clearAlert();
+  });
+
+  tabSignUp.addEventListener("click", () => {
+    tabSignUp.classList.add("active");
+    tabSignIn.classList.remove("active");
+    formSignUp.style.display = "block";
+    formSignIn.style.display = "none";
+    clearAlert();
+  });
+
+  function getRedirect() {
+    const params = new URLSearchParams(window.location.search);
+    return params.get("redirect") || "index.html";
+  }
+
+  // 1. Client Sign In
+  formSignIn.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    clearAlert();
+
+    const email = formSignIn.email.value.trim();
+    const password = formSignIn.password.value;
+    const btn = formSignIn.querySelector("button[type='submit']");
+
+    btn.disabled = true;
+    btn.textContent = "Signing in...";
+
+    try {
+      const resp = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password })
+      });
+
+      const data = await resp.json();
+      if (!data.success) throw new Error(data.message || "Invalid email or password.");
+
+      // Store auth
+      if (window.setAuth) {
+        window.setAuth(data.token, data.user);
+      } else {
+        localStorage.setItem("sky_auth_token", data.token);
+        localStorage.setItem("sky_auth_user", JSON.stringify(data.user));
+      }
+
+      showAlert("Sign-in successful! Redirecting...", true);
+      setTimeout(() => {
+        window.location.href = getRedirect();
+      }, 900);
+    } catch (err) {
+      console.error("Sign-in error:", err);
+      showAlert(err.message || "Invalid email or password.", false);
+    } finally {
+      btn.disabled = false;
+      btn.textContent = "SIGN IN";
+    }
+  });
+
+  // 2. Client Sign Up
+  formSignUp.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    clearAlert();
+
+    const name = formSignUp.name.value.trim();
+    const username = formSignUp.username.value.trim();
+    const email = formSignUp.email.value.trim();
+    const password = formSignUp.password.value;
+    const btn = formSignUp.querySelector("button[type='submit']");
+
+    if (!name || !email || !password) {
+      showAlert("Please enter all required fields.", false);
+      return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = "Creating account...";
+
+    try {
+      const resp = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, username: username || "", email, password })
+      });
+
+      const data = await resp.json();
+      if (!data.success) throw new Error(data.message || "Could not create account.");
+
+      // Store auth
+      if (window.setAuth) {
+        window.setAuth(data.token, data.user);
+      } else {
+        localStorage.setItem("sky_auth_token", data.token);
+        localStorage.setItem("sky_auth_user", JSON.stringify(data.user));
+      }
+
+      showAlert("Account created successfully! Redirecting...", true);
+      setTimeout(() => {
+        window.location.href = getRedirect();
+      }, 1000);
+
+    } catch (err) {
+      console.error("Sign-up error:", err);
+      showAlert(err.message || "Could not create account.", false);
+    } finally {
+      btn.disabled = false;
+      btn.textContent = "SIGN UP";
+    }
+  });
+</script>
+
+</body>
+</html>
