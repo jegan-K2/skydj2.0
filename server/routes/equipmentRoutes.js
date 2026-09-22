@@ -11,10 +11,13 @@ const { getAll, getById, create, update, remove } = require('../controllers/equi
 const authMiddleware = require('../middleware/authMiddleware');
 const adminMiddleware = require('../middleware/adminMiddleware');
 
-// Multer config for equipment images
 const equipStorageDir = path.join(__dirname, '../../uploads/equipment');
-if (!fs.existsSync(equipStorageDir)) {
-  fs.mkdirSync(equipStorageDir, { recursive: true });
+try {
+  if (!fs.existsSync(equipStorageDir)) {
+    fs.mkdirSync(equipStorageDir, { recursive: true });
+  }
+} catch (err) {
+  // Ignored in read-only serverless filesystems
 }
 
 const storage = multer.diskStorage({

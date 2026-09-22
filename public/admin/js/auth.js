@@ -21,7 +21,12 @@ function initAuthGuard() {
   fetch("/api/auth/me", {
     headers: { "Authorization": "Bearer " + token }
   })
-  .then(resp => resp.json())
+  .then(resp => {
+    if (!resp.ok) {
+      throw new Error("Auth check failed with status " + resp.status);
+    }
+    return resp.json();
+  })
   .then(data => {
     if (!data.success || !data.user) {
       if (!isLoginPage) {

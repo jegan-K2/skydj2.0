@@ -374,6 +374,7 @@ async function loadQuotations() {
 
   } catch (err) {
     console.error("loadQuotations error:", err);
+    if (tbody) tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding:24px; color:#ef4444;">Error loading quotations: ${esc(err.message)}</td></tr>`;
   }
 }
 
@@ -590,6 +591,7 @@ async function loadReviews() {
     renderReviewsTable();
   } catch (err) {
     console.error("loadReviews error:", err);
+    if (tbody) tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding:24px; color:#ef4444;">Error loading reviews: ${esc(err.message)}</td></tr>`;
   }
 }
 

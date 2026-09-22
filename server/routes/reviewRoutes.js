@@ -13,8 +13,12 @@ const adminMiddleware = require('../middleware/adminMiddleware');
 
 // Multer config for review event photos
 const reviewStorageDir = path.join(__dirname, '../../uploads/reviews');
-if (!fs.existsSync(reviewStorageDir)) {
-  fs.mkdirSync(reviewStorageDir, { recursive: true });
+try {
+  if (!fs.existsSync(reviewStorageDir)) {
+    fs.mkdirSync(reviewStorageDir, { recursive: true });
+  }
+} catch (err) {
+  // Ignored in read-only serverless filesystems
 }
 
 const storage = multer.diskStorage({

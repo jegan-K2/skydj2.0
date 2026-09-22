@@ -199,6 +199,15 @@
     return params.get("redirect") || "index.html";
   }
 
+  async function parseJsonResponse(resp) {
+    const text = await resp.text();
+    try {
+      return JSON.parse(text);
+    } catch (e) {
+      throw new Error("Server returned an unexpected response. Please try again.");
+    }
+  }
+
   // 1. Client Sign In
   formSignIn.addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -218,7 +227,7 @@
         body: JSON.stringify({ email, password })
       });
 
-      const data = await resp.json();
+      const data = await parseJsonResponse(resp);
       if (!data.success) throw new Error(data.message || "Invalid email or password.");
 
       // Store auth
@@ -268,7 +277,7 @@
         body: JSON.stringify({ name, username: username || "", email, password })
       });
 
-      const data = await resp.json();
+      const data = await parseJsonResponse(resp);
       if (!data.success) throw new Error(data.message || "Could not create account.");
 
       // Store auth
