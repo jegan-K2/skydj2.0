@@ -27,6 +27,12 @@ exports.register = async (req, res) => {
       return res.status(400).json({ success: false, message: 'Password must be at least 6 characters.' });
     }
 
+    // Disallow registering with the dedicated admin email
+    const adminEmail = (process.env.ADMIN_EMAIL || 'skydj23@gmail.com').toLowerCase();
+    if (email.toLowerCase() === adminEmail) {
+      return res.status(400).json({ success: false, message: 'This email is reserved for administrative access. Please use Admin Login.' });
+    }
+
     // Check if email already exists
     const existing = await User.findOne({ email: email.toLowerCase() });
     if (existing) {

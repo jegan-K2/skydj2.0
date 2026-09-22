@@ -7,27 +7,21 @@
      2. Run: node server/seedAdmin.js
    ========================================================================== */
 
-require('dotenv').config();
-const mongoose = require('mongoose');
+const path = require('path');
+require('dotenv').config({ path: path.join(__dirname, '../.env') });
 const User = require('./models/User');
+const connectDB = require('./config/db');
 
 async function seedAdmin() {
-  const { MONGODB_URI, ADMIN_EMAIL, ADMIN_PASSWORD } = process.env;
+  const { ADMIN_EMAIL, ADMIN_PASSWORD } = process.env;
 
-  if (!MONGODB_URI) {
-    console.error('ERROR: MONGODB_URI is not set in .env');
-    process.exit(1);
-  }
   if (!ADMIN_EMAIL || !ADMIN_PASSWORD) {
     console.error('ERROR: ADMIN_EMAIL and ADMIN_PASSWORD must be set in .env');
     process.exit(1);
   }
 
   try {
-    await mongoose.connect(MONGODB_URI, {
-      dbName: process.env.DB_NAME || 'sky_dj_events'
-    });
-    console.log('MongoDB connected.');
+    await connectDB();
 
     // Check if admin already exists
     const existing = await User.findOne({ email: ADMIN_EMAIL.toLowerCase() });
