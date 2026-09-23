@@ -25,8 +25,12 @@ const reviewsUploadsDir = path.join(uploadsDir, 'reviews');
 
 const app = express();
 
-// Middleware
-app.use(cors());
+// CORS configuration
+app.use(cors({
+  origin: true,
+  credentials: true
+}));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -36,26 +40,49 @@ app.use('/uploads', express.static(uploadsDir));
 // Serve frontend static files
 app.use(express.static(path.join(__dirname, '../public')));
 
-// Ensure database is connected before processing API requests (essential for serverless)
+// Health check endpoint (always accessible for diagnostic & uptime checks)
+app.get('/api/health', async (req, res) => {
+  const mongoose = require('mongoose');
+  const isUriSet = Boolean(process.env.MONGODB_URI);
+  const isUriPlaceholder = isUriSet && (process.env.MONGODB_URI.includes('<db_password>') || process.env.MONGODB_URI.includes('<password>'));
+  const dbState = mongoose.connection.readyState;
+  const statusNames = { 0: 'disconnected', 1: 'connected', 2: 'connecting', 3: 'disconnecting' };
+
+  let dbError = null;
+  if (dbState !== 1 && isUriSet && !isUriPlaceholder) {
+    try {
+      await connectDB();
+    } catch (e) {
+      dbError = e.message;
+    }
+  }
+
+  const isConnected = mongoose.connection.readyState === 1;
+
+  res.status(isConnected ? 200 : 503).json({
+    success: isConnected,
+    message: isConnected ? 'SKY DJ API is running and connected to MongoDB' : 'SKY DJ API is running but database is not connected',
+    database: {
+      configured: isUriSet,
+      hasPlaceholder: isUriPlaceholder,
+      status: statusNames[mongoose.connection.readyState] || 'unknown',
+      error: dbError || (isUriPlaceholder ? 'MONGODB_URI contains a placeholder password (<db_password>)' : (!isUriSet ? 'MONGODB_URI is not set in environment variables' : null))
+    }
+  });
+});
+
+// Ensure database is connected before processing other API requests
 app.use('/api', async (req, res, next) => {
   try {
     await connectDB();
     next();
   } catch (err) {
     console.error('Database connection error in request:', err.message);
-    res.status(500).json({
+    res.status(503).json({
       success: false,
-      message: 'Database connection failed. Please check MONGODB_URI configuration.'
+      message: 'Database connection failed: ' + (err.message || 'Please check MONGODB_URI configuration.')
     });
   }
-});
-
-// Health check endpoint
-app.get('/api/health', (req, res) => {
-  res.json({
-    success: true,
-    message: 'SKY DJ API is running'
-  });
 });
 
 // API Routes
