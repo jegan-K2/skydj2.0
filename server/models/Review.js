@@ -15,6 +15,10 @@ const reviewSchema = new mongoose.Schema({
     required: [true, 'Name is required'],
     trim: true
   },
+  clientName: {
+    type: String,
+    trim: true
+  },
   functionType: {
     type: String,
     required: [true, 'Function type is required'],
@@ -29,13 +33,34 @@ const reviewSchema = new mongoose.Schema({
     type: String,
     default: ''
   },
+  eventPhoto: {
+    type: String,
+    default: ''
+  },
   status: {
     type: String,
     enum: ['pending', 'approved', 'rejected'],
-    default: 'pending'
+    default: 'approved'
   }
 }, {
   timestamps: true
+});
+
+// Auto-sync clientName <-> name and imageUrl <-> eventPhoto before saving
+reviewSchema.pre('save', function(next) {
+  if (!this.clientName && this.name) {
+    this.clientName = this.name;
+  }
+  if (!this.name && this.clientName) {
+    this.name = this.clientName;
+  }
+  if (!this.eventPhoto && this.imageUrl) {
+    this.eventPhoto = this.imageUrl;
+  }
+  if (!this.imageUrl && this.eventPhoto) {
+    this.imageUrl = this.eventPhoto;
+  }
+  next();
 });
 
 // Indexes for common queries

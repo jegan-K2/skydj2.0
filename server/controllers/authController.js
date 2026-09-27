@@ -96,12 +96,60 @@ exports.login = async (req, res) => {
         id: user._id,
         name: user.name,
         email: user.email,
+        username: user.username || '',
         role: user.role
       }
     });
   } catch (err) {
     console.error('Login error:', err);
     res.status(500).json({ success: false, message: 'Login failed. Please try again.' });
+  }
+};
+
+// POST /api/auth/admin-login — Dedicated Admin Authentication
+exports.adminLogin = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+      return res.status(400).json({ success: false, message: 'Email and password are required.' });
+    }
+
+    const trimmedEmail = email.toLowerCase().trim();
+
+    // Find user with password included
+    const user = await User.findOne({ email: trimmedEmail }).select('+password');
+    if (!user) {
+      return res.status(401).json({ success: false, message: 'Invalid admin credentials.' });
+    }
+
+    const isMatch = await user.comparePassword(password);
+    if (!isMatch) {
+      return res.status(401).json({ success: false, message: 'Invalid admin credentials.' });
+    }
+
+    // Strictly verify admin role
+    if (user.role !== 'admin') {
+      return res.status(403).json({ success: false, message: 'Access denied: You do not have administrator permissions.' });
+    }
+
+    const token = generateToken(user);
+
+    res.json({
+      success: true,
+      message: 'Admin authentication successful.',
+      token,
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        username: user.username || '',
+        role: user.role
+      }
+    });
+  } catch (err) {
+    console.error('Admin login error:', err);
+    res.status(500).json({ success: false, message: 'Admin login failed. Please try again.' });
   }
 };
 
@@ -119,7 +167,7 @@ exports.getMe = async (req, res) => {
         id: user._id,
         name: user.name,
         email: user.email,
-        username: user.username,
+        username: user.username || '',
         role: user.role,
         createdAt: user.createdAt
       }

@@ -49,8 +49,9 @@ const upload = multer({
 // Public: approved reviews only
 router.get('/', getApproved);
 
-// Admin: all reviews
+// Admin: all reviews (supports both /all and /admin)
 router.get('/all', authMiddleware, adminMiddleware, getAll);
+router.get('/admin', authMiddleware, adminMiddleware, getAll);
 
 // Authenticated client: submit review with optional event photo
 router.post('/', authMiddleware, upload.single('eventPhoto'), create);

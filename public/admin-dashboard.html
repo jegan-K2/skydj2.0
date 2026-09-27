@@ -37,6 +37,9 @@
         <span class="admin-nav-icon">📬</span> Quotations
         <span class="admin-nav-badge" id="navPendingQuotationsBadge" style="display: none;">0</span>
       </a>
+      <a href="admin-dashboard.html#contact" class="admin-nav-item" data-tab="contact">
+        <span class="admin-nav-icon">📞</span> Contact Details
+      </a>
     </nav>
 
     <div class="admin-sidebar-footer">
@@ -113,6 +116,7 @@
             <button class="btn btn-gold" onclick="switchAdminTab('equipment')">📦 Manage Equipment</button>
             <button class="btn btn-outline-gold" onclick="switchAdminTab('reviews')">⭐ Moderate Reviews</button>
             <button class="btn btn-outline-gold" onclick="switchAdminTab('quotations')">📬 View Quotations</button>
+            <button class="btn btn-outline-gold" onclick="switchAdminTab('contact')">📞 Contact Details</button>
           </div>
         </div>
 
@@ -325,6 +329,58 @@
       </div>
 
       <!-- ════════════════════════════════════════════════════════════════════
+           VIEW: CONTACT DETAILS MANAGEMENT
+           ════════════════════════════════════════════════════════════════════ -->
+      <div id="view-contact" class="admin-tab-view" style="display:none;">
+        <div class="admin-card" style="max-width: 620px;">
+          <div class="admin-card-header">
+            <h2 class="admin-card-title">📞 Contact Details</h2>
+          </div>
+          <div class="modal-body">
+            <div id="contactAdminAlert" class="alert-box" style="display:none;"></div>
+
+            <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:20px; line-height:1.65;">
+              Set the WhatsApp number displayed on the website's <strong style="color:var(--gold-bright);">CONTACT US</strong> section.
+              Visitors will be redirected to this WhatsApp when they click the button.
+            </p>
+
+            <form id="contactDetailsForm">
+              <div class="admin-form-group">
+                <label class="admin-form-label" for="adminWhatsappInput">WhatsApp Number <span style="color:var(--gold-bright);">*</span></label>
+                <input
+                  type="text"
+                  id="adminWhatsappInput"
+                  class="admin-form-control"
+                  placeholder="e.g. 918489573472 (digits only, with country code)"
+                  maxlength="20"
+                />
+                <span style="font-size:0.78rem; color:var(--text-dim); display:block; margin-top:6px;">Enter digits only with country code. Example: 918489573472 for +91 84895 73472</span>
+              </div>
+
+              <div class="admin-form-group">
+                <label class="admin-form-label" for="adminPhoneInput">Display Phone (optional)</label>
+                <input type="text" id="adminPhoneInput" class="admin-form-control" placeholder="+91 84895 73472">
+              </div>
+
+              <div class="admin-form-group">
+                <label class="admin-form-label" for="adminEmailInput">Email (optional)</label>
+                <input type="email" id="adminEmailInput" class="admin-form-control" placeholder="contact@skydj.com">
+              </div>
+
+              <div class="admin-form-group">
+                <label class="admin-form-label" for="adminAddressInput">Address (optional)</label>
+                <input type="text" id="adminAddressInput" class="admin-form-control" placeholder="Business address">
+              </div>
+
+              <div style="margin-top:24px;">
+                <button type="submit" class="btn btn-gold" id="saveContactBtn">💾 Save Contact Details</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <!-- ════════════════════════════════════════════════════════════════════
            VIEW 7: SETTINGS
            ════════════════════════════════════════════════════════════════════ -->
       <div id="view-settings" class="admin-tab-view" style="display:none;">
@@ -407,6 +463,7 @@
     </div>
   </div>
 
+  <script src="./js/api-config.js"></script>
   <script src="./js/app.js"></script>
   <script src="./admin/js/auth.js"></script>
   <script src="./admin/js/dashboard.js"></script>

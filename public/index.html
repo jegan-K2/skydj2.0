@@ -93,6 +93,89 @@
       border-radius: var(--r-md);
       background: rgba(0,0,0,0.2);
     }
+
+    /* ─── Compact Premium "Your Review" Card ─── */
+    .your-review-section {
+      padding: 24px 0 64px 0;
+    }
+    .your-review-card {
+      max-width: 500px;
+      margin: 0 auto;
+      padding: 32px 28px;
+      background: linear-gradient(145deg, rgba(22, 24, 36, 0.94) 0%, rgba(12, 13, 20, 0.98) 100%);
+      border: 1px solid rgba(212, 160, 23, 0.28);
+      border-radius: var(--r-xl);
+      box-shadow: 0 14px 40px rgba(0, 0, 0, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+      position: relative;
+      overflow: hidden;
+      text-align: center;
+      transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+                  border-color 0.35s ease,
+                  box-shadow 0.35s ease;
+    }
+    .your-review-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 20%;
+      right: 20%;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--gold-bright), transparent);
+      opacity: 0.9;
+    }
+    .your-review-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(212, 160, 23, 0.65);
+      box-shadow: 0 18px 48px rgba(0, 0, 0, 0.75), 0 0 30px rgba(212, 160, 23, 0.22);
+    }
+    .your-review-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--font-tech);
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--gold-bright);
+      padding: 5px 14px;
+      border-radius: var(--r-full);
+      background: rgba(212, 160, 23, 0.08);
+      border: 1px solid rgba(212, 160, 23, 0.25);
+      margin-bottom: 14px;
+    }
+    .your-review-heading {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      color: var(--text-white);
+      margin: 0 0 8px 0;
+    }
+    .your-review-divider {
+      width: 44px;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--gold-primary), transparent);
+      margin: 0 auto 12px auto;
+    }
+    .your-review-desc {
+      color: var(--text-muted);
+      font-size: 0.93rem;
+      line-height: 1.55;
+      margin: 0 auto 22px auto;
+      max-width: 410px;
+    }
+    .your-review-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      padding: 13px 34px;
+      font-size: 0.92rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      box-shadow: 0 4px 20px rgba(212, 160, 23, 0.28);
+    }
   </style>
 </head>
 <body>
@@ -128,13 +211,28 @@
 
     <!-- Top Navigation Menu -->
     <nav class="nav-links">
-      <a href="index.html" class="nav-link active">HOME</a>
-      <a href="products.html" class="nav-link">EQUIPMENT</a>
-      <a href="login.html" class="nav-link nav-login-btn">LOGIN</a>
+      <a href="index.html" class="nav-link active" data-i18n="nav_home">HOME</a>
+      <a href="products.html" class="nav-link" data-i18n="nav_equipment">EQUIPMENT</a>
+      <a href="enquiry.html" class="nav-link" data-i18n="nav_quotation">GET A QUOTATION</a>
+      <a href="javascript:void(0)" class="nav-link contact-whatsapp-trigger" id="topNavContactBtn" data-i18n="nav_contact">CONTACT</a>
+      <a href="login.html" class="nav-link nav-login-btn" data-i18n="nav_login">LOGIN</a>
+
+      <!-- Language Selector -->
+      <div class="lang-selector" id="langSelector" style="position:relative;display:flex;align-items:center;">
+        <button class="lang-btn" id="langToggleBtn" aria-haspopup="listbox" aria-expanded="false" title="Change Language">
+          <span id="langCurrentFlag">🌐</span>
+          <span id="langCurrentLabel">EN</span>
+          <span style="font-size:0.65rem;opacity:0.7;">▾</span>
+        </button>
+        <ul class="lang-dropdown" id="langDropdown" role="listbox" style="display:none;">
+          <li role="option" data-lang="en" class="lang-option active">🇬🇧 English</li>
+          <li role="option" data-lang="ta" class="lang-option">🇮🇳 தமிழ்</li>
+          <li role="option" data-lang="tl" class="lang-option">🗣️ Tanglish</li>
+        </ul>
+      </div>
     </nav>
 
     <div class="nav-actions" style="display:flex;align-items:center;gap:14px;">
-      <a href="enquiry.html" class="btn btn-gold btn-sm">GET A QUOTATION</a>
       <button class="hamburger-btn" id="hamburgerBtn" aria-label="Open menu">☰</button>
     </div>
   </div>
@@ -148,11 +246,16 @@
     <button class="mobile-nav-close" id="mobileNavClose" aria-label="Close menu">&times;</button>
   </div>
   <div class="mobile-nav-links">
-    <a href="index.html" class="mobile-nav-link active">HOME</a>
-    <a href="products.html" class="mobile-nav-link">EQUIPMENT</a>
-    <a href="login.html" class="mobile-nav-link mobile-nav-login-btn">LOGIN</a>
-    <div style="padding:16px;">
-      <a href="enquiry.html" class="btn btn-gold" style="width:100%;">GET A QUOTATION</a>
+    <a href="index.html" class="mobile-nav-link active" data-i18n="nav_home">HOME</a>
+    <a href="products.html" class="mobile-nav-link" data-i18n="nav_equipment">EQUIPMENT</a>
+    <a href="enquiry.html" class="mobile-nav-link" data-i18n="nav_quotation">GET A QUOTATION</a>
+    <a href="javascript:void(0)" class="mobile-nav-link contact-whatsapp-trigger" id="mobileNavContactBtn" data-i18n="nav_contact">CONTACT</a>
+    <a href="login.html" class="mobile-nav-link mobile-nav-login-btn" data-i18n="nav_login">LOGIN</a>
+    <!-- Mobile Language Picker -->
+    <div style="padding:12px 16px; border-top:1px solid rgba(212,160,23,0.12); display:flex; gap:8px;">
+      <button class="mobile-lang-btn" data-lang="en" id="mobileLangEn">🇬🇧 English</button>
+      <button class="mobile-lang-btn" data-lang="ta" id="mobileLangTa">🇮🇳 தமிழ்</button>
+      <button class="mobile-lang-btn" data-lang="tl" id="mobileLangTl">🗣️ Tanglish</button>
     </div>
   </div>
 </div>
@@ -225,20 +328,23 @@
   </section>
 
   <!-- ━━━ 4. YOUR REVIEW SECTION (Immediately Following Approved Reviews) ━━━ -->
-  <section class="section" id="yourReviewSection" style="padding-top: 10px; padding-bottom: 70px;">
-    <div class="container" style="text-align: center;">
-      <div style="max-width: 600px; margin: 0 auto; padding: 36px 24px; background: var(--black-surface); border: 1px solid var(--black-border); border-radius: var(--r-xl); box-shadow: var(--shadow-card);" class="reveal">
-        <span class="section-eyebrow" style="margin-bottom: 8px; display: inline-block;">✨ Share Your Feedback</span>
-        <h3 style="font-family: var(--font-display); font-size: 1.6rem; color: #fff; margin-bottom: 8px;">
+  <section class="section your-review-section" id="yourReviewSection">
+    <div class="container">
+      <div class="your-review-card reveal">
+        <span class="your-review-eyebrow" data-i18n="your_review_eyebrow">
+          ✦ SHARE YOUR EXPERIENCE
+        </span>
+        <h3 class="your-review-heading" data-i18n="your_review_heading">
           YOUR REVIEW
         </h3>
-        <div class="gold-divider" style="margin: 12px auto 16px auto;"></div>
-        <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 28px;">
-          Share your experience with SKY DJ.
+        <div class="your-review-divider"></div>
+        <p class="your-review-desc" data-i18n="your_review_desc">
+          We'd love to hear about your event experience with SKY DJ.
         </p>
         <!-- The ONLY visible Add Your Review button on the homepage -->
-        <button type="button" class="btn btn-gold btn-lg" id="openReviewModalBtn">
-          ADD YOUR REVIEW
+        <button type="button" class="btn btn-gold your-review-btn" id="openReviewModalBtn">
+          <span>★</span>
+          <span data-i18n="add_your_review">ADD YOUR REVIEW</span>
         </button>
       </div>
     </div>
@@ -258,8 +364,13 @@
       <!-- Review Form for Authenticated Clients -->
       <form id="homeReviewForm">
         <div class="admin-form-group">
-          <label class="admin-form-label" for="reviewCustomerName">Name *</label>
-          <input type="text" name="name" id="reviewCustomerName" class="admin-form-control" placeholder="Your name" required>
+          <label class="admin-form-label">Posting as</label>
+          <div style="display:flex; align-items:center; gap:10px; padding:10px 14px; background:rgba(212,160,23,0.08); border:1px solid rgba(212,160,23,0.25); border-radius:var(--r-md); color:#fff;">
+            <span style="font-size:1.1rem; color:var(--gold-bright);">👤</span>
+            <span id="reviewClientDisplayName" style="font-weight:600; color:var(--gold-bright);">Client</span>
+            <span style="font-size:0.78rem; color:var(--text-muted); margin-left:auto;">(Account Verified)</span>
+          </div>
+          <input type="hidden" name="name" id="reviewCustomerName">
         </div>
 
         <div class="admin-form-group">
@@ -306,29 +417,24 @@
 
 <!-- ━━━ 5. FOOTER ━━━ -->
 <footer class="site-footer">
-  <div class="container" style="text-align: center; padding: 36px 20px;">
-    <img src="./images/logo.png" alt="SKY DJ Logo" style="width: 54px; height: 54px; border-radius: 50%; margin: 0 auto 14px auto; border: 1px solid var(--gold-primary);">
-    <p class="brand-name-nav" style="margin-bottom: 6px; font-size: 1.1rem; color: #fff;">
-      <span class="sky-text">SKY</span> DJ &amp; EVENT MANAGEMENT
-    </p>
-    <p style="color: var(--gold-bright); font-size: 0.88rem; margin-bottom: 18px; letter-spacing: 0.06em;">
-      DJ • Sound • Lighting • Stage • Events
-    </p>
-
-    <div style="display: flex; justify-content: center; gap: 24px; margin-bottom: 20px; font-size: 0.9rem;">
+  <div class="container" style="text-align: center; padding: 28px 20px;">
+    <div style="display: flex; justify-content: center; flex-wrap: wrap; gap: 24px; margin-bottom: 16px; font-size: 0.9rem;">
       <a href="index.html" style="color: var(--text-muted);">Home</a>
       <a href="products.html" style="color: var(--text-muted);">Equipment</a>
       <a href="enquiry.html" style="color: var(--text-muted);">Get a Quotation</a>
+      <a href="javascript:void(0)" class="contact-whatsapp-trigger" style="color: var(--text-muted);">Contact</a>
       <a href="login.html" style="color: var(--text-muted);">Login</a>
     </div>
 
-    <div style="color: var(--text-dim); font-size: 0.82rem; border-top: 1px solid var(--black-border); padding-top: 16px;">
+    <div style="color: var(--text-dim); font-size: 0.82rem; border-top: 1px solid var(--black-border); padding-top: 14px;">
       © <span id="footerYear"></span> SKY DJ &amp; EVENT MANAGEMENT. All rights reserved.
     </div>
   </div>
 </footer>
 
 <!-- ━━━ SCRIPTS ━━━ -->
+<script src="./js/api-config.js"></script>
+<script src="./js/i18n.js"></script>
 <script src="./js/app.js"></script>
 <script>
   // Footer Year
@@ -351,14 +457,16 @@
     if (!container) return;
 
     try {
-      const resp = await fetch("/api/reviews");
+      const resp = await (typeof window.apiFetch === 'function'
+        ? window.apiFetch("/reviews")
+        : fetch((window.API_BASE_URL || window.API_BASE || "http://localhost:5000/api") + "/reviews"));
       const data = await resp.json();
 
       if (!data.success || !data.data || data.data.length === 0) {
         container.innerHTML = `
           <div class="state-box">
             <div style="font-size: 1.8rem; margin-bottom: 8px;">⭐</div>
-            <h4 style="color: var(--gold-bright); font-size: 1.1rem; margin-bottom: 6px;">No Customer Reviews Yet</h4>
+            <h4 style="color: var(--gold-bright); font-size: 1.1rem; margin-bottom: 6px;">No client reviews yet.</h4>
             <p style="color: var(--text-muted); font-size: 0.9rem;">Be the first client to share your event experience with SKY DJ &amp; EVENT MANAGEMENT!</p>
           </div>
         `;
@@ -366,8 +474,9 @@
       }
 
       container.innerHTML = data.data.map(r => {
-        const photo = r.imageUrl || "";
-        const customer = r.name || "Client";
+        const rawPhoto = r.imageUrl || r.eventPhoto || "";
+        const photo = (typeof window.resolveUploadUrl === 'function') ? window.resolveUploadUrl(rawPhoto) : rawPhoto;
+        const customer = r.clientName || r.name || "Client";
         const fType = r.functionType || "Event";
         const text = r.feedback || "";
 
@@ -420,9 +529,10 @@
 
   function openReviewFormModal() {
     const storedUser = window.getStoredUser ? window.getStoredUser() : null;
-    if (nameInput && !nameInput.value && storedUser && storedUser.name) {
-      nameInput.value = storedUser.name;
-    }
+    const clientName = (storedUser && storedUser.name) ? storedUser.name : (storedUser && storedUser.email ? storedUser.email : 'Client');
+    const nameDisplay = document.getElementById("reviewClientDisplayName");
+    if (nameDisplay) nameDisplay.textContent = clientName;
+    if (nameInput) nameInput.value = clientName;
     if (reviewModal) reviewModal.classList.add("active");
   }
 
@@ -506,16 +616,17 @@
       submitBtn.textContent = "Submitting Review...";
 
       try {
-        const name = reviewForm.name.value.trim();
         const functionType = reviewForm.functionType.value;
         const feedback = reviewForm.feedback.value.trim();
 
-        if (!name || !functionType || !feedback) {
-          throw new Error("Please fill in all required fields.");
+        if (!functionType || !feedback) {
+          throw new Error("Please select a function type and enter your feedback.");
         }
 
         const formData = new FormData();
-        formData.append("name", name);
+        const storedUser = window.getStoredUser ? window.getStoredUser() : null;
+        const clientName = (storedUser && storedUser.name) ? storedUser.name : (nameInput ? nameInput.value : "");
+        if (clientName) formData.append("name", clientName);
         formData.append("functionType", functionType);
         formData.append("feedback", feedback);
 
@@ -524,11 +635,17 @@
         }
 
         const token = window.getAuthToken ? window.getAuthToken() : "";
-        const resp = await fetch("/api/reviews", {
-          method: "POST",
-          headers: { "Authorization": "Bearer " + token },
-          body: formData
-        });
+        const resp = await (typeof window.apiFetch === 'function'
+          ? window.apiFetch("/reviews", {
+              method: "POST",
+              headers: { "Authorization": "Bearer " + token },
+              body: formData
+            })
+          : fetch((window.API_BASE_URL || window.API_BASE || "http://localhost:5000/api") + "/reviews", {
+              method: "POST",
+              headers: { "Authorization": "Bearer " + token },
+              body: formData
+            }));
 
         const data = await resp.json();
         if (!data.success) throw new Error(data.message || "Failed to submit review.");
@@ -537,11 +654,18 @@
         selectedReviewFile = null;
         if (photoPreviewWrap) photoPreviewWrap.style.display = "none";
         reviewModal.classList.remove("active");
-        showToast("Review submitted successfully! It will appear on the homepage once approved by admin.", "success");
+        showToast("Review submitted successfully! It is now visible on the website.", "success");
+
+        // Immediately refresh reviews list from MongoDB and render
+        await loadHomeReviews();
+
+        // Smooth scroll to Client Reviews section
+        const revSec = document.getElementById("reviewsSection");
+        if (revSec) revSec.scrollIntoView({ behavior: "smooth" });
 
       } catch (err) {
         console.error("Review submission error:", err);
-        alert("Could not submit review: " + err.message);
+        showToast(err.message || "Could not submit review.", "error");
       } finally {
         submitBtn.disabled = false;
         submitBtn.textContent = "SUBMIT REVIEW";
@@ -603,5 +727,85 @@
     animate();
   })();
 </script>
+
+
+
+<!-- ━━━ LANGUAGE SELECTOR LOGIC ━━━ -->
+<script>
+  (function initLangSelector() {
+    const LANG_META = {
+      en: { flag: '🇬🇧', label: 'EN' },
+      ta: { flag: '🇮🇳', label: 'தமிழ்' },
+      tl: { flag: '🗣️', label: 'TL' }
+    };
+
+    const toggleBtn = document.getElementById('langToggleBtn');
+    const dropdown  = document.getElementById('langDropdown');
+    const flagEl    = document.getElementById('langCurrentFlag');
+    const labelEl   = document.getElementById('langCurrentLabel');
+
+    function updateLangUI(lang) {
+      const meta = LANG_META[lang] || LANG_META['en'];
+      if (flagEl)  flagEl.textContent  = meta.flag;
+      if (labelEl) labelEl.textContent = meta.label;
+
+      // Mark active in dropdown
+      document.querySelectorAll('.lang-option').forEach(opt => {
+        opt.classList.toggle('active', opt.getAttribute('data-lang') === lang);
+      });
+      // Mark active in mobile
+      document.querySelectorAll('.mobile-lang-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.getAttribute('data-lang') === lang);
+      });
+    }
+
+    // Init with saved language
+    if (window.SKY_i18n) {
+      updateLangUI(window.SKY_i18n.getLanguage());
+      window.SKY_i18n.applyTranslations();
+    }
+
+    // Desktop toggle
+    if (toggleBtn && dropdown) {
+      toggleBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const isOpen = dropdown.style.display !== 'none';
+        dropdown.style.display = isOpen ? 'none' : 'block';
+        toggleBtn.setAttribute('aria-expanded', String(!isOpen));
+      });
+      document.addEventListener('click', () => {
+        dropdown.style.display = 'none';
+        if (toggleBtn) toggleBtn.setAttribute('aria-expanded', 'false');
+      });
+    }
+
+    // Desktop lang option click
+    document.querySelectorAll('.lang-option').forEach(opt => {
+      opt.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const lang = opt.getAttribute('data-lang');
+        if (window.SKY_i18n) window.SKY_i18n.setLanguage(lang);
+        updateLangUI(lang);
+        if (dropdown) dropdown.style.display = 'none';
+      });
+    });
+
+    // Mobile lang buttons
+    document.querySelectorAll('.mobile-lang-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const lang = btn.getAttribute('data-lang');
+        if (window.SKY_i18n) window.SKY_i18n.setLanguage(lang);
+        updateLangUI(lang);
+      });
+    });
+
+    // Listen for lang changes (from other sources)
+    document.addEventListener('sky:langchange', (e) => {
+      updateLangUI(e.detail.lang);
+    });
+  })();
+</script>
+
+<script src="./js/chatbot.js"></script>
 </body>
 </html>

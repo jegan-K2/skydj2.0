@@ -11,7 +11,7 @@ exports.getApproved = async (req, res) => {
   try {
     const reviews = await Review.find({ status: 'approved' })
       .sort({ createdAt: -1 })
-      .limit(20);
+      .limit(50);
     res.json({ success: true, data: reviews });
   } catch (err) {
     console.error('getApproved reviews error:', err);
@@ -19,7 +19,7 @@ exports.getApproved = async (req, res) => {
   }
 };
 
-// GET /api/reviews/all — admin only (all statuses)
+// GET /api/reviews/all or /api/reviews/admin — admin only (all statuses)
 exports.getAll = async (req, res) => {
   try {
     const reviews = await Review.find().sort({ createdAt: -1 });
@@ -33,11 +33,15 @@ exports.getAll = async (req, res) => {
 // POST /api/reviews — authenticated client
 exports.create = async (req, res) => {
   try {
-    const { name, functionType, feedback } = req.body;
+    const { functionType, feedback } = req.body;
 
-    if (!name || !functionType || !feedback) {
-      return res.status(400).json({ success: false, message: 'Name, function type, and feedback are required.' });
+    if (!functionType || !feedback || !functionType.trim() || !feedback.trim()) {
+      return res.status(400).json({ success: false, message: 'Function type and feedback are required.' });
     }
+
+    // Authenticated user identity strictly taken from backend session/JWT
+    const userId = req.user.id;
+    const clientName = (req.user && req.user.name) ? req.user.name : (req.body.name ? req.body.name.trim() : 'Client');
 
     let imageUrl = '';
     if (req.file) {
@@ -45,22 +49,24 @@ exports.create = async (req, res) => {
     }
 
     const review = await Review.create({
-      userId: req.user.id,
-      name,
-      functionType,
-      feedback,
+      userId,
+      name: clientName,
+      clientName: clientName,
+      functionType: functionType.trim(),
+      feedback: feedback.trim(),
       imageUrl,
-      status: 'pending' // Always pending — client cannot set approved
+      eventPhoto: imageUrl,
+      status: 'approved' // Automatically approved so it appears immediately in Client Reviews
     });
 
     res.status(201).json({
       success: true,
-      message: 'Review submitted successfully! It will appear once approved by admin.',
+      message: 'Review submitted successfully! It is now visible in the Client Reviews section.',
       data: review
     });
   } catch (err) {
     console.error('create review error:', err);
-    res.status(500).json({ success: false, message: 'Could not submit review.' });
+    res.status(500).json({ success: false, message: 'Could not submit review. Please try again.' });
   }
 };
 

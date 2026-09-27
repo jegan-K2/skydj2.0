@@ -22,12 +22,27 @@
       </div>
     </a>
     <nav class="nav-links">
-      <a href="index.html" class="nav-link">HOME</a>
-      <a href="products.html" class="nav-link active">EQUIPMENT</a>
-      <a href="login.html" class="nav-link nav-login-btn">LOGIN</a>
+      <a href="index.html" class="nav-link" data-i18n="nav_home">HOME</a>
+      <a href="products.html" class="nav-link active" data-i18n="nav_equipment">EQUIPMENT</a>
+      <a href="enquiry.html" class="nav-link" data-i18n="nav_quotation">GET A QUOTATION</a>
+      <a href="javascript:void(0)" class="nav-link contact-whatsapp-trigger" id="topNavContactBtn" data-i18n="nav_contact">CONTACT</a>
+      <a href="login.html" class="nav-link nav-login-btn" data-i18n="nav_login">LOGIN</a>
+
+      <!-- Language Selector -->
+      <div class="lang-selector" id="langSelector" style="position:relative;display:flex;align-items:center;">
+        <button class="lang-btn" id="langToggleBtn" aria-haspopup="listbox" aria-expanded="false" title="Change Language">
+          <span id="langCurrentFlag">🌐</span>
+          <span id="langCurrentLabel">EN</span>
+          <span style="font-size:0.65rem;opacity:0.7;">▾</span>
+        </button>
+        <ul class="lang-dropdown" id="langDropdown" role="listbox" style="display:none;">
+          <li role="option" data-lang="en" class="lang-option active">🇬🇧 English</li>
+          <li role="option" data-lang="ta" class="lang-option">🇮🇳 தமிழ்</li>
+          <li role="option" data-lang="tl" class="lang-option">🗣️ Tanglish</li>
+        </ul>
+      </div>
     </nav>
     <div style="display:flex;align-items:center;gap:14px;">
-      <a href="enquiry.html" class="btn btn-gold btn-sm">GET A QUOTATION</a>
       <button class="hamburger-btn" id="hamburgerBtn" aria-label="Open menu">☰</button>
     </div>
   </div>
@@ -41,10 +56,17 @@
     <button class="mobile-nav-close" id="mobileNavClose">&times;</button>
   </div>
   <div class="mobile-nav-links">
-    <a href="index.html" class="mobile-nav-link">HOME</a>
-    <a href="products.html" class="mobile-nav-link active">EQUIPMENT</a>
-    <a href="login.html" class="mobile-nav-link mobile-nav-login-btn">LOGIN</a>
-    <div style="padding:16px;"><a href="enquiry.html" class="btn btn-gold" style="width:100%;">GET A QUOTATION</a></div>
+    <a href="index.html" class="mobile-nav-link" data-i18n="nav_home">HOME</a>
+    <a href="products.html" class="mobile-nav-link active" data-i18n="nav_equipment">EQUIPMENT</a>
+    <a href="enquiry.html" class="mobile-nav-link" data-i18n="nav_quotation">GET A QUOTATION</a>
+    <a href="javascript:void(0)" class="mobile-nav-link contact-whatsapp-trigger" id="mobileNavContactBtn" data-i18n="nav_contact">CONTACT</a>
+    <a href="login.html" class="mobile-nav-link mobile-nav-login-btn" data-i18n="nav_login">LOGIN</a>
+    <!-- Mobile Language Picker -->
+    <div style="padding:12px 16px; border-top:1px solid rgba(212,160,23,0.12); display:flex; gap:8px;">
+      <button class="mobile-lang-btn" data-lang="en" id="mobileLangEn">🇬🇧 English</button>
+      <button class="mobile-lang-btn" data-lang="ta" id="mobileLangTa">🇮🇳 தமிழ்</button>
+      <button class="mobile-lang-btn" data-lang="tl" id="mobileLangTl">🗣️ Tanglish</button>
+    </div>
   </div>
 </div>
 
@@ -84,18 +106,12 @@
 
 <!-- Footer -->
 <footer class="site-footer">
-  <div class="container" style="text-align:center; padding:36px 20px;">
-    <img src="./images/logo.png" alt="SKY DJ Logo" style="width:48px; height:48px; border-radius:50%; margin:0 auto 12px auto; border:1px solid var(--gold-primary);">
-    <p class="brand-name-nav" style="margin-bottom:6px; color:#fff;">
-      <span class="sky-text">SKY</span> DJ &amp; EVENT MANAGEMENT
-    </p>
-    <p style="color:var(--gold-bright); font-size:0.85rem; margin-bottom:16px;">
-      DJ • Sound • Lighting • Stage • Events
-    </p>
-    <div style="display:flex; justify-content:center; gap:20px; font-size:0.88rem; margin-bottom:16px;">
+  <div class="container" style="text-align:center; padding:28px 20px;">
+    <div style="display:flex; justify-content:center; flex-wrap:wrap; gap:20px; font-size:0.88rem; margin-bottom:16px;">
       <a href="index.html" style="color:var(--text-muted);">Home</a>
       <a href="products.html" style="color:var(--text-muted);">Equipment</a>
       <a href="enquiry.html" style="color:var(--text-muted);">Get a Quotation</a>
+      <a href="javascript:void(0)" class="contact-whatsapp-trigger" style="color:var(--text-muted);">Contact</a>
       <a href="login.html" style="color:var(--text-muted);">Login</a>
     </div>
     <div style="color:var(--text-dim); font-size:0.8rem; border-top:1px solid var(--black-border); padding-top:14px;">
@@ -104,7 +120,66 @@
   </div>
 </footer>
 
-<script type="module" src="./js/app.js"></script>
-<script type="module" src="./js/products.js"></script>
+<script src="./js/api-config.js"></script>
+<script src="./js/i18n.js"></script>
+<script src="./js/app.js"></script>
+<script src="./js/products.js"></script>
+<script>
+  // Language selector for products page
+  (function initLangSelector() {
+    const LANG_META = {
+      en: { flag: '🇬🇧', label: 'EN' },
+      ta: { flag: '🇮🇳', label: 'தமிழ்' },
+      tl: { flag: '🗣️', label: 'TL' }
+    };
+    const toggleBtn = document.getElementById('langToggleBtn');
+    const dropdown  = document.getElementById('langDropdown');
+    const flagEl    = document.getElementById('langCurrentFlag');
+    const labelEl   = document.getElementById('langCurrentLabel');
+    function updateLangUI(lang) {
+      const meta = LANG_META[lang] || LANG_META['en'];
+      if (flagEl)  flagEl.textContent  = meta.flag;
+      if (labelEl) labelEl.textContent = meta.label;
+      document.querySelectorAll('.lang-option').forEach(opt =>
+        opt.classList.toggle('active', opt.getAttribute('data-lang') === lang));
+      document.querySelectorAll('.mobile-lang-btn').forEach(btn =>
+        btn.classList.toggle('active', btn.getAttribute('data-lang') === lang));
+    }
+    if (window.SKY_i18n) {
+      updateLangUI(window.SKY_i18n.getLanguage());
+      window.SKY_i18n.applyTranslations();
+    }
+    if (toggleBtn && dropdown) {
+      toggleBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const isOpen = dropdown.style.display !== 'none';
+        dropdown.style.display = isOpen ? 'none' : 'block';
+        toggleBtn.setAttribute('aria-expanded', String(!isOpen));
+      });
+      document.addEventListener('click', () => {
+        dropdown.style.display = 'none';
+        if (toggleBtn) toggleBtn.setAttribute('aria-expanded', 'false');
+      });
+    }
+    document.querySelectorAll('.lang-option').forEach(opt => {
+      opt.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const lang = opt.getAttribute('data-lang');
+        if (window.SKY_i18n) window.SKY_i18n.setLanguage(lang);
+        updateLangUI(lang);
+        if (dropdown) dropdown.style.display = 'none';
+      });
+    });
+    document.querySelectorAll('.mobile-lang-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const lang = btn.getAttribute('data-lang');
+        if (window.SKY_i18n) window.SKY_i18n.setLanguage(lang);
+        updateLangUI(lang);
+      });
+    });
+    document.addEventListener('sky:langchange', (e) => updateLangUI(e.detail.lang));
+  })();
+</script>
+<script src="./js/chatbot.js"></script>
 </body>
 </html>

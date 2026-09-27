@@ -14,9 +14,16 @@
   }
 }
 
+/* ─── 1150px: Intermediate Screen ─── */
+@media (max-width: 1150px) {
+  .nav-links { gap: 18px; }
+  .nav-link { font-size: 0.84rem; }
+}
+
 /* ─── 1024px: Tablets Landscape ─── */
 @media (max-width: 1024px) {
-  .nav-links { gap: 22px; }
+  .nav-links { gap: 14px; }
+  .nav-link { font-size: 0.82rem; }
 
   .footer-grid {
     grid-template-columns: 1fr 1fr;

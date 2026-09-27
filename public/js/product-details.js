@@ -1,6 +1,7 @@
 /* ==========================================================================
    product-details.js — Single Equipment Detail Page
    Fetches from Express REST API
+   Depends on api-config.js (window.apiFetch, window.resolveUploadUrl)
    ========================================================================== */
 
 document.addEventListener("DOMContentLoaded", async () => {
@@ -15,7 +16,9 @@ document.addEventListener("DOMContentLoaded", async () => {
   detailsSection.innerHTML = `<div class="spinner-wrap"><div class="spinner"></div><span class="spinner-text">Loading product details…</span></div>`;
 
   try {
-    const resp = await fetch(`/api/equipment/${pid}`);
+    const resp = await (typeof window.apiFetch === 'function'
+      ? window.apiFetch(`/equipment/${pid}`)
+      : fetch((window.API_BASE_URL || window.API_BASE || "http://localhost:5000/api") + `/equipment/${pid}`));
     const data = await resp.json();
 
     if (!data.success || !data.data) {
@@ -31,8 +34,12 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 });
 
+
 function renderProductDetails(p, container) {
-  const imgSrc = p.imageUrl || "";
+  const rawImg = p.imageUrl || "";
+  const imgSrc = (typeof window.resolveUploadUrl === 'function')
+    ? window.resolveUploadUrl(rawImg)
+    : rawImg;
 
   container.innerHTML = `
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start;" class="product-detail-grid">

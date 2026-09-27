@@ -11,6 +11,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initNavScroll();
   initScrollReveal();
   initAuthTracker();
+  initContactTriggers();
 });
 
 /* ── Mobile Nav ── */
@@ -152,9 +153,12 @@ async function initAuthTracker() {
 
   // Verify token with backend
   try {
-    const resp = await fetch("/api/auth/me", {
-      headers: { "Authorization": "Bearer " + token }
-    });
+    // Use apiFetch if available (loaded from api-config.js), else fall back to fetch with /api
+    const fetchFn = (typeof window.apiFetch === 'function') ? window.apiFetch : null;
+    const resp = fetchFn
+      ? await fetchFn("/auth/me", { headers: { "Authorization": "Bearer " + token } })
+      : await fetch((window.API_BASE_URL || window.API_BASE || "http://localhost:5000/api") + "/auth/me", { headers: { "Authorization": "Bearer " + token } });
+
     if (!resp.ok) {
       clearAuth();
       loginLinks.forEach(link => {
@@ -194,6 +198,7 @@ async function initAuthTracker() {
   }
 }
 
+
 /* ── Format Date ── */
 function formatDate(dateStr) {
   if (!dateStr) return "";
@@ -210,6 +215,53 @@ function formatDate(dateStr) {
   }
 }
 
+/* ── Global WhatsApp Contact Trigger ── */
+let _cachedWaNumber = null;
+
+async function getAdminWhatsAppNumber() {
+  if (_cachedWaNumber) return _cachedWaNumber;
+  try {
+    const fetchFn = (typeof window.apiFetch === 'function') ? window.apiFetch : null;
+    const resp = fetchFn
+      ? await fetchFn('/contact')
+      : await fetch((window.API_BASE_URL || window.API_BASE || 'http://localhost:5000/api') + '/contact');
+    const data = await resp.json();
+    if (data.success && data.contact && data.contact.whatsapp) {
+      _cachedWaNumber = data.contact.whatsapp.trim().replace(/\D/g, '');
+      return _cachedWaNumber;
+    }
+  } catch (err) {
+    console.warn('Could not fetch WhatsApp contact:', err);
+  }
+  return '';
+}
+
+async function openSkyContactWhatsApp() {
+  const waNumber = await getAdminWhatsAppNumber();
+  if (!waNumber) {
+    const msg = window.SKY_i18n ? window.SKY_i18n.t('contact_not_set') : 'Contact number is not configured yet.';
+    if (typeof showToast === 'function') {
+      showToast(msg, 'info');
+    } else {
+      alert(msg);
+    }
+    return;
+  }
+  const text = encodeURIComponent('Hello SKY DJ & EVENT MANAGEMENT, I am interested in your services!');
+  window.open(`https://wa.me/${waNumber}?text=${text}`, '_blank', 'noopener,noreferrer');
+}
+
+function initContactTriggers() {
+  document.addEventListener('click', (e) => {
+    const trigger = e.target.closest('.contact-whatsapp-trigger, #topNavContactBtn, #mobileNavContactBtn');
+    if (trigger) {
+      if (trigger.id === 'whatsappContactBtn') return; // Handled specifically by section button
+      e.preventDefault();
+      openSkyContactWhatsApp();
+    }
+  });
+}
+
 // Make functions available globally for inline scripts and other modules
 window.escapeHtml = escapeHtml;
 window.showToast = showToast;
@@ -222,3 +274,5 @@ window.isLoggedIn = isLoggedIn;
 window.isAdmin = isAdmin;
 window.formatDate = formatDate;
 window.initScrollReveal = initScrollReveal;
+window.openSkyContactWhatsApp = openSkyContactWhatsApp;
+window.getAdminWhatsAppNumber = getAdminWhatsAppNumber;

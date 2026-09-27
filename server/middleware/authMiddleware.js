@@ -20,7 +20,14 @@ const authMiddleware = async (req, res, next) => {
       return res.status(401).json({ success: false, message: 'User not found. Please log in again.' });
     }
 
-    req.user = { id: user._id, email: user.email, role: user.role, name: user.name };
+    req.user = {
+      id: user._id.toString(),
+      _id: user._id,
+      email: user.email,
+      role: user.role,
+      name: user.name,
+      username: user.username || ''
+    };
     next();
   } catch (err) {
     if (err.name === 'TokenExpiredError') {

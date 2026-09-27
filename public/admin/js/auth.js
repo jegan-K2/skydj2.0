@@ -1,12 +1,15 @@
 /* ==========================================================================
    SKY DJ & EVENT MANAGEMENT - ADMIN AUTH MODULE (auth.js)
    JWT-based Authentication Guard, Sign-out, Route Protection
+   Works from both Express (port 5000) and VS Code Live Server (port 5500).
+   Depends on api-config.js being loaded first (provides window.apiFetch).
    ========================================================================== */
 
 // Check authentication state on all admin pages
 function initAuthGuard() {
-  const isLoginPage = window.location.pathname.endsWith("admin-login.html") || 
-                      window.location.pathname.endsWith("admin-login");
+  const pathname = window.location.pathname;
+  const isLoginPage = pathname.endsWith("admin-login.html") ||
+                      pathname.endsWith("admin-login");
 
   const token = window.getAuthToken ? window.getAuthToken() : localStorage.getItem("sky_auth_token");
 
@@ -17,8 +20,13 @@ function initAuthGuard() {
     return;
   }
 
+  // apiFetch from api-config.js handles the correct base URL for any serving origin
+  const doFetch = (typeof window.apiFetch === 'function')
+    ? (path, opts) => window.apiFetch(path, opts)
+    : (path, opts) => fetch((window.API_BASE_URL || window.API_BASE || 'http://localhost:5000/api') + path, opts);
+
   // Verify token and check admin role
-  fetch("/api/auth/me", {
+  doFetch("/auth/me", {
     headers: { "Authorization": "Bearer " + token }
   })
   .then(resp => {
@@ -49,7 +57,8 @@ function initAuthGuard() {
       injectAdminEmail(data.user.email);
     }
   })
-  .catch(() => {
+  .catch(err => {
+    console.warn("Admin auth guard error:", err);
     if (!isLoginPage) {
       if (window.clearAuth) window.clearAuth();
       window.location.href = "admin-login.html";

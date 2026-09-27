@@ -2,7 +2,22 @@
    SKY DJ & EVENT MANAGEMENT - ADMIN UNIFIED DASHBOARD SCRIPT (dashboard.js)
    Single-page Tab Navigation, Equipment CRUD, Quotations,
    Reviews Moderation (with Event Photos) — All via REST API
+
+   Depends on api-config.js (provides window.apiFetch and window.resolveUploadUrl)
+   and app.js (provides auth helpers).
    ========================================================================== */
+
+// Safe wrappers in case api-config.js is somehow not yet loaded
+function _apiFetch(path, opts) {
+  return (typeof window.apiFetch === 'function')
+    ? window.apiFetch(path, opts)
+    : fetch((window.API_BASE_URL || window.API_BASE || 'http://localhost:5000/api') + path, opts);
+}
+function _resolveUpload(url) {
+  return (typeof window.resolveUploadUrl === 'function')
+    ? window.resolveUploadUrl(url)
+    : url;
+}
 
 // Global in-memory caches
 let equipmentList = [];
@@ -44,6 +59,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initEquipmentSection();
   initQuotationsSection();
   initReviewsSection();
+  initContactSection();
 });
 
 /* ── Tab Switcher ── */
@@ -93,6 +109,7 @@ window.switchAdminTab = function(tabName) {
       equipment: "Equipment Management",
       quotations: "Quotation Requests",
       reviews: "Client Reviews Moderation",
+      contact: "Contact Details",
       settings: "System Settings"
     };
     headerTitle.textContent = titles[tabName] || "Admin Portal";
@@ -121,12 +138,12 @@ async function loadDashboardStats() {
 
   try {
     // Equipment count
-    const eqResp = await fetch("/api/equipment");
+    const eqResp = await _apiFetch("/equipment");
     const eqData = await eqResp.json();
     if (statItems) statItems.textContent = eqData.success ? eqData.data.length : 0;
 
     // Reviews (all)
-    const revResp = await fetch("/api/reviews/all", { headers: authHeaders() });
+    const revResp = await _apiFetch("/reviews/all", { headers: authHeaders() });
     const revData = await revResp.json();
     let pendingRevCount = 0;
     if (revData.success && revData.data) {
@@ -140,7 +157,7 @@ async function loadDashboardStats() {
     }
 
     // Quotations
-    const quotResp = await fetch("/api/quotations", { headers: authHeaders() });
+    const quotResp = await _apiFetch("/quotations", { headers: authHeaders() });
     const quotData = await quotResp.json();
     let totalQuot = 0, pendingQuot = 0;
     if (quotData.success && quotData.data) {
@@ -168,7 +185,7 @@ async function loadEquipment() {
   tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; padding:24px; color:var(--text-muted);">Loading equipment...</td></tr>`;
 
   try {
-    const resp = await fetch("/api/equipment");
+    const resp = await _apiFetch("/equipment");
     const data = await resp.json();
 
     if (!data.success || !data.data || data.data.length === 0) {
@@ -180,7 +197,8 @@ async function loadEquipment() {
     equipmentList = data.data;
 
     tbody.innerHTML = equipmentList.map(item => {
-      const thumb = item.imageUrl || "";
+      const thumbRaw = item.imageUrl || "";
+      const thumb = _resolveUpload(thumbRaw);
       const desc = item.description ? item.description.substring(0, 80) + (item.description.length > 80 ? '...' : '') : '—';
 
       return `
@@ -270,14 +288,14 @@ function initEquipmentSection() {
           throw new Error("Please choose an equipment image.");
         }
 
-        let url = "/api/equipment";
+        let apiPath = "/equipment";
         let method = "POST";
         if (currentEditingEquipmentId) {
-          url = `/api/equipment/${currentEditingEquipmentId}`;
+          apiPath = `/equipment/${currentEditingEquipmentId}`;
           method = "PUT";
         }
 
-        const resp = await fetch(url, {
+        const resp = await _apiFetch(apiPath, {
           method,
           headers: authHeaders(),
           body: formData
@@ -326,7 +344,7 @@ window.openEditEquipmentModal = function(id) {
   if (!item) return;
 
   currentEditingEquipmentId = id;
-  currentEquipmentImageUrl = item.imageUrl || "";
+  currentEquipmentImageUrl = _resolveUpload(item.imageUrl || "");
 
   const modal = document.getElementById("equipmentModal");
   const form = document.getElementById("equipmentForm");
@@ -344,7 +362,7 @@ window.openEditEquipmentModal = function(id) {
 window.deleteEquipmentItem = async function(id) {
   if (!confirm("Are you sure you want to delete this equipment item permanently?")) return;
   try {
-    const resp = await fetch(`/api/equipment/${id}`, {
+    const resp = await _apiFetch(`/equipment/${id}`, {
       method: "DELETE",
       headers: authHeaders()
     });
@@ -364,7 +382,7 @@ async function loadQuotations() {
   if (!tbody) return;
 
   try {
-    const resp = await fetch("/api/quotations", { headers: authHeaders() });
+    const resp = await _apiFetch("/quotations", { headers: authHeaders() });
     const data = await resp.json();
 
     quotationsList = data.success && data.data ? data.data : [];
@@ -540,7 +558,7 @@ window.saveQuotationStatus = async function(id) {
   const newStatus = sel.value;
 
   try {
-    const resp = await fetch(`/api/quotations/${id}`, {
+    const resp = await _apiFetch(`/quotations/${id}`, {
       method: "PUT",
       headers: authJsonHeaders(),
       body: JSON.stringify({ status: newStatus })
@@ -559,7 +577,7 @@ window.saveQuotationStatus = async function(id) {
 window.deleteQuotationItem = async function(id) {
   if (!confirm("Are you sure you want to delete this quotation request?")) return;
   try {
-    const resp = await fetch(`/api/quotations/${id}`, {
+    const resp = await _apiFetch(`/quotations/${id}`, {
       method: "DELETE",
       headers: authHeaders()
     });
@@ -579,7 +597,7 @@ async function loadReviews() {
   if (!tbody) return;
 
   try {
-    const resp = await fetch("/api/reviews/all", { headers: authHeaders() });
+    const resp = await _apiFetch("/reviews/all", { headers: authHeaders() });
     const data = await resp.json();
 
     reviewsList = data.success && data.data ? data.data : [];
@@ -607,8 +625,9 @@ function renderReviewsTable() {
   }
 
   tbody.innerHTML = filtered.map(r => {
-    const photo = r.imageUrl || "";
-    const customer = r.name || "Client";
+    const photoRaw = r.imageUrl || r.eventPhoto || "";
+    const photo = _resolveUpload(photoRaw);
+    const customer = r.clientName || r.name || "Client";
     const fType = r.functionType || "Event";
     const reviewText = r.feedback || "";
     const statusClass = r.status === "approved" ? "status-approved" : r.status === "rejected" ? "status-rejected" : "status-pending";
@@ -660,7 +679,7 @@ function initReviewsSection() {
 
 window.setReviewApproval = async function(id, action) {
   try {
-    const resp = await fetch(`/api/reviews/${id}/${action}`, {
+    const resp = await _apiFetch(`/reviews/${id}/${action}`, {
       method: "PUT",
       headers: authHeaders()
     });
@@ -676,7 +695,7 @@ window.setReviewApproval = async function(id, action) {
 window.deleteReviewItem = async function(id) {
   if (!confirm("Are you sure you want to delete this review permanently?")) return;
   try {
-    const resp = await fetch(`/api/reviews/${id}`, {
+    const resp = await _apiFetch(`/reviews/${id}`, {
       method: "DELETE",
       headers: authHeaders()
     });
@@ -688,3 +707,85 @@ window.deleteReviewItem = async function(id) {
     alert("Could not delete review: " + err.message);
   }
 };
+
+/* ═══════════════════════════════════════════════════════════════
+   CONTACT DETAILS SECTION
+   ═══════════════════════════════════════════════════════════════ */
+function initContactSection() {
+  const form        = document.getElementById('contactDetailsForm');
+  const alertBox    = document.getElementById('contactAdminAlert');
+  const waInput     = document.getElementById('adminWhatsappInput');
+  const phoneInput  = document.getElementById('adminPhoneInput');
+  const emailInput  = document.getElementById('adminEmailInput');
+  const addrInput   = document.getElementById('adminAddressInput');
+  if (!form) return;
+
+  function showAlert(msg, type) {
+    if (!alertBox) return;
+    alertBox.style.display = 'block';
+    alertBox.textContent = msg;
+    alertBox.className = `alert-box ${type === 'success' ? 'alert-success' : 'alert-error'}`;
+    setTimeout(() => { alertBox.style.display = 'none'; }, 4500);
+  }
+
+  // Load current contact details into form
+  async function loadContactDetails() {
+    try {
+      const resp = await _apiFetch('/contact');
+      const data = await resp.json();
+      if (data.success && data.contact) {
+        if (waInput    && data.contact.whatsapp) waInput.value   = data.contact.whatsapp;
+        if (phoneInput && data.contact.phone)    phoneInput.value = data.contact.phone;
+        if (emailInput && data.contact.email)    emailInput.value = data.contact.email;
+        if (addrInput  && data.contact.address)  addrInput.value  = data.contact.address;
+      }
+    } catch (err) {
+      console.warn('Could not load contact details:', err);
+    }
+  }
+
+  // Auto-load when tab becomes active
+  document.querySelectorAll('.admin-sidebar-nav .admin-nav-item').forEach(item => {
+    if (item.getAttribute('data-tab') === 'contact') {
+      item.addEventListener('click', () => setTimeout(loadContactDetails, 100));
+    }
+  });
+
+  // Save on submit
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const saveBtn = document.getElementById('saveContactBtn');
+    if (saveBtn) { saveBtn.disabled = true; saveBtn.textContent = 'Saving...'; }
+
+    // Strip non-digits from WhatsApp number
+    const rawWa = waInput ? waInput.value.trim() : '';
+    const cleanWa = rawWa.replace(/\D/g, '');
+
+    if (!cleanWa) {
+      showAlert('WhatsApp number is required.', 'error');
+      if (saveBtn) { saveBtn.disabled = false; saveBtn.textContent = '💾 Save Contact Details'; }
+      return;
+    }
+
+    try {
+      const resp = await _apiFetch('/contact', {
+        method: 'PUT',
+        headers: authJsonHeaders(),
+        body: JSON.stringify({
+          whatsapp: cleanWa,
+          phone:    phoneInput ? phoneInput.value.trim() : '',
+          email:    emailInput ? emailInput.value.trim() : '',
+          address:  addrInput  ? addrInput.value.trim()  : ''
+        })
+      });
+      const data = await resp.json();
+      if (!data.success) throw new Error(data.message || 'Failed to save.');
+      if (waInput) waInput.value = cleanWa; // Normalize display
+      showAlert('✅ Contact details saved successfully!', 'success');
+    } catch (err) {
+      showAlert('❌ Error: ' + (err.message || 'Could not save contact details.'), 'error');
+    } finally {
+      if (saveBtn) { saveBtn.disabled = false; saveBtn.textContent = '💾 Save Contact Details'; }
+    }
+  });
+}

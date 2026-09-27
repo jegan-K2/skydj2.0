@@ -3,162 +3,373 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login | SKY DJ & EVENT MANAGEMENT</title>
-  <meta name="description" content="Choose your role to access SKY DJ & EVENT MANAGEMENT client portal or business admin portal.">
+  <title>Client Login & Sign Up | SKY DJ & EVENT MANAGEMENT</title>
+  <meta name="description" content="Client Sign In & Sign Up for SKY DJ & EVENT MANAGEMENT portal.">
   <link rel="icon" type="image/png" href="./images/logo.png">
   <link rel="stylesheet" href="./css/style.css">
   <link rel="stylesheet" href="./css/responsive.css">
   <style>
-    .role-page-wrapper {
+    .auth-page-wrapper {
       min-height: 100vh;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       padding: 40px 20px;
-      position: relative;
       background: radial-gradient(circle at 50% 30%, #151824 0%, #050507 90%);
     }
-    .role-card-container {
+    .auth-box {
       width: 100%;
-      max-width: 780px;
-      margin: 0 auto;
-    }
-    .role-selection-box {
+      max-width: 460px;
       background: var(--black-card);
       border: 1px solid var(--black-border);
       border-radius: var(--r-xl);
-      padding: 48px 36px;
+      padding: 40px 32px;
       box-shadow: var(--shadow-heavy);
-      text-align: center;
       position: relative;
-      overflow: hidden;
     }
-    .role-selection-box::before {
+    .auth-tabs {
+      display: flex;
+      border-bottom: 1px solid var(--black-border);
+      margin-bottom: 24px;
+    }
+    .auth-tab-btn {
+      flex: 1;
+      padding: 12px;
+      text-align: center;
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-weight: 700;
+      font-size: 0.95rem;
+      cursor: pointer;
+      position: relative;
+      transition: color var(--t-fast);
+    }
+    .auth-tab-btn.active {
+      color: var(--gold-bright);
+    }
+    .auth-tab-btn.active::after {
       content: '';
       position: absolute;
-      top: 0; left: 10%; right: 10%; height: 2px;
-      background: linear-gradient(90deg, transparent, var(--gold-primary), transparent);
+      bottom: -1px; left: 0; right: 0;
+      height: 2px;
+      background: var(--gold-primary);
     }
-    .role-options-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 24px;
-      margin-top: 36px;
-      text-align: left;
+    .alert-msg {
+      padding: 12px;
+      border-radius: var(--r-sm);
+      font-size: 0.85rem;
+      margin-bottom: 18px;
+      display: none;
     }
-    .role-option-card {
-      background: var(--black-surface);
-      border: 1px solid var(--black-border);
-      border-radius: var(--r-lg);
-      padding: 32px 24px;
-      cursor: pointer;
-      transition: all var(--t-mid) var(--ease-smooth);
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      position: relative;
+    .alert-err {
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid rgba(239, 68, 68, 0.4);
+      color: #ef4444;
     }
-    .role-option-card:hover {
-      border-color: var(--gold-primary);
-      transform: translateY(-4px);
-      box-shadow: 0 10px 30px rgba(212, 160, 23, 0.15);
-    }
-    .role-icon {
-      font-size: 2.4rem;
-      margin-bottom: 16px;
-    }
-    .role-title {
-      font-family: var(--font-display);
-      font-size: 1.4rem;
-      color: var(--gold-bright);
-      margin-bottom: 8px;
-    }
-    .role-desc {
-      color: var(--text-muted);
-      font-size: 0.9rem;
-      line-height: 1.6;
-      margin-bottom: 24px;
+    .alert-suc {
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid rgba(16, 185, 129, 0.4);
+      color: #10b981;
     }
   </style>
 </head>
 <body>
 
-<div class="role-page-wrapper">
-  <div class="role-card-container">
-    <div class="role-selection-box">
-      
-      <!-- Official Brand Logo -->
-      <a href="index.html" style="display:inline-block; margin-bottom: 20px;">
-        <img src="./images/logo.png" alt="SKY DJ & EVENT MANAGEMENT" style="width: 70px; height: 70px; margin: 0 auto; border-radius: 50%; border: 2px solid var(--gold-primary); box-shadow: 0 0 20px var(--gold-glow);">
+<div class="auth-page-wrapper">
+  <div class="auth-box">
+
+    <!-- Brand Header -->
+    <div style="text-align: center; margin-bottom: 24px;">
+      <a href="index.html">
+        <img src="./images/logo.png" alt="SKY DJ Logo" style="width: 64px; height: 64px; border-radius: 50%; border: 2px solid var(--gold-primary); margin: 0 auto 12px auto; box-shadow: 0 0 16px var(--gold-glow);">
       </a>
-
-      <h1 style="font-family: var(--font-display); font-size: 1.8rem; margin-bottom: 8px; color: #fff;">
-        CHOOSE YOUR ROLE
+      <h1 style="font-family: var(--font-display); font-size: 1.45rem; color: #fff; margin-bottom: 4px;">
+        CLIENT PORTAL
       </h1>
-      <p style="color: var(--text-muted); font-size: 0.95rem;">
-        Welcome to SKY DJ &amp; EVENT MANAGEMENT. Select how you would like to proceed.
+      <p style="color: var(--text-muted); font-size: 0.85rem;">
+        SKY DJ &amp; EVENT MANAGEMENT
       </p>
-
-      <!-- Role Options Grid -->
-      <div class="role-options-grid">
-        
-        <!-- Option 1: CLIENT -->
-        <div class="role-option-card" id="clientCard" onclick="window.location.href='client-login.html'">
-          <div>
-            <div class="role-icon">👤</div>
-            <h2 class="role-title">CLIENT</h2>
-            <p class="role-desc">
-              Customer access to submit event reviews with photos, browse available equipment, and send customized event quotation requests.
-            </p>
-          </div>
-
-          <div>
-            <a href="client-login.html" class="btn btn-outline-gold" style="width: 100%; text-align: center; display: block;">
-              CLIENT LOGIN / SIGN UP →
-            </a>
-          </div>
-        </div>
-
-        <!-- Option 2: ADMIN -->
-        <div class="role-option-card" id="adminCard" onclick="window.location.href='admin-login.html'">
-          <div>
-            <div class="role-icon">🛡️</div>
-            <h2 class="role-title">ADMIN</h2>
-            <p class="role-desc">
-              Business management portal.
-            </p>
-          </div>
-
-          <div>
-            <a href="admin-login.html" class="btn btn-gold" style="width: 100%; text-align: center; display: block;">
-              ADMIN LOGIN →
-            </a>
-          </div>
-        </div>
-
-      </div>
-
-      <!-- Return to website link -->
-      <div style="margin-top: 36px; padding-top: 24px; border-top: 1px solid var(--black-border);">
-        <a href="index.html" style="color: var(--gold-primary); font-size: 0.9rem; text-decoration: none;">
-          ← Back to Homepage
-        </a>
-      </div>
-
     </div>
+
+    <!-- Alert Box -->
+    <div id="authAlert" class="alert-msg"></div>
+
+    <!-- Toggle Tabs: Sign In / Sign Up -->
+    <div class="auth-tabs">
+      <button type="button" class="auth-tab-btn active" id="tabSignInBtn">SIGN IN</button>
+      <button type="button" class="auth-tab-btn" id="tabSignUpBtn">SIGN UP</button>
+    </div>
+
+    <!-- ── SIGN IN FORM ── -->
+    <form id="signInForm">
+      <div class="admin-form-group">
+        <label class="admin-form-label" for="signInEmail">Email *</label>
+        <input type="email" id="signInEmail" name="email" class="admin-form-control" placeholder="name@example.com" required autocomplete="email">
+      </div>
+
+      <div class="admin-form-group">
+        <label class="admin-form-label" for="signInPassword">Password *</label>
+        <input type="password" id="signInPassword" name="password" class="admin-form-control" placeholder="••••••••" required autocomplete="current-password">
+      </div>
+
+      <button type="submit" class="btn btn-gold" style="width: 100%; margin-top: 10px; padding: 12px; font-weight: 700;">
+        SIGN IN
+      </button>
+    </form>
+
+    <!-- ── SIGN UP FORM ── -->
+    <form id="signUpForm" style="display: none;">
+      <div class="admin-form-group">
+        <label class="admin-form-label" for="signUpName">Name *</label>
+        <input type="text" id="signUpName" name="name" class="admin-form-control" placeholder="Your full name" required>
+      </div>
+
+      <div class="admin-form-group">
+        <label class="admin-form-label" for="signUpUsername">Username (Optional)</label>
+        <input type="text" id="signUpUsername" name="username" class="admin-form-control" placeholder="e.g. rahul99">
+      </div>
+
+      <div class="admin-form-group">
+        <label class="admin-form-label" for="signUpEmail">Email *</label>
+        <input type="email" id="signUpEmail" name="email" class="admin-form-control" placeholder="name@example.com" required autocomplete="email">
+      </div>
+
+      <div class="admin-form-group">
+        <label class="admin-form-label" for="signUpPassword">Password *</label>
+        <input type="password" id="signUpPassword" name="password" class="admin-form-control" placeholder="At least 6 characters" required autocomplete="new-password">
+      </div>
+
+      <button type="submit" class="btn btn-gold" style="width: 100%; margin-top: 10px; padding: 12px; font-weight: 700;">
+        SIGN UP
+      </button>
+    </form>
+
+    <!-- Footer Links -->
+    <div style="text-align: center; margin-top: 24px; padding-top: 18px; border-top: 1px solid var(--black-border); font-size: 0.88rem;">
+      <a href="index.html" style="color: var(--gold-primary); text-decoration: none;">
+        ← Back to Homepage
+      </a>
+    </div>
+
   </div>
 </div>
 
+<script src="./js/api-config.js"></script>
+<script src="./js/app.js"></script>
 <script>
-  // Preserve any redirect query parameters
-  const params = window.location.search;
-  if (params) {
-    const clientCard = document.getElementById("clientCard");
-    const clientLink = clientCard ? clientCard.querySelector("a") : null;
-    if (clientCard) clientCard.onclick = () => window.location.href = 'client-login.html' + params;
-    if (clientLink) clientLink.href = 'client-login.html' + params;
+  const tabSignIn = document.getElementById("tabSignInBtn");
+  const tabSignUp = document.getElementById("tabSignUpBtn");
+  const formSignIn = document.getElementById("signInForm");
+  const formSignUp = document.getElementById("signUpForm");
+  const alertBox = document.getElementById("authAlert");
+
+  function showAlert(msg, isSuccess) {
+    alertBox.textContent = msg;
+    alertBox.className = `alert-msg ${isSuccess ? 'alert-suc' : 'alert-err'}`;
+    alertBox.style.display = "block";
   }
+
+  function clearAlert() {
+    alertBox.style.display = "none";
+  }
+
+  // Toggle Tab handling
+  tabSignIn.addEventListener("click", () => {
+    tabSignIn.classList.add("active");
+    tabSignUp.classList.remove("active");
+    formSignIn.style.display = "block";
+    formSignUp.style.display = "none";
+    clearAlert();
+  });
+
+  tabSignUp.addEventListener("click", () => {
+    tabSignUp.classList.add("active");
+    tabSignIn.classList.remove("active");
+    formSignUp.style.display = "block";
+    formSignIn.style.display = "none";
+    clearAlert();
+  });
+
+  function getRedirect() {
+    const params = new URLSearchParams(window.location.search);
+    const redirect = params.get("redirect") || "index.html";
+    if (/^(https?:|\/\/)/i.test(redirect)) {
+      return "index.html";
+    }
+    return redirect;
+  }
+
+  async function parseJsonResponse(resp) {
+    const text = await resp.text();
+    try {
+      return JSON.parse(text);
+    } catch (e) {
+      if (resp.status === 503) {
+        throw new Error("Database error: Service temporarily unavailable.");
+      }
+      if (resp.status >= 500) {
+        throw new Error(`Server error (${resp.status}): An internal server error occurred.`);
+      }
+      throw new Error("Server returned an unexpected response. Please try again.");
+    }
+  }
+
+  // 1. Client Sign In
+  formSignIn.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    clearAlert();
+
+    const email = formSignIn.email.value.trim();
+    const password = formSignIn.password.value;
+    const btn = formSignIn.querySelector("button[type='submit']");
+
+    if (!email || !password) {
+      showAlert("Email and password are required.", false);
+      return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = "Signing in...";
+
+    const baseApi = window.API_BASE_URL || window.API_BASE || "http://localhost:5000/api";
+    const loginUrl = baseApi.endsWith("/") ? (baseApi + "auth/login") : (baseApi + "/auth/login");
+
+    try {
+      const resp = await (typeof window.apiFetch === 'function'
+        ? window.apiFetch("/auth/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email, password })
+          })
+        : fetch(loginUrl, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email, password })
+          }));
+
+      const data = await parseJsonResponse(resp);
+      if (!resp.ok || !data.success) {
+        let msg = data.message;
+        if (!msg) {
+          if (resp.status === 401) {
+            msg = "Invalid email or password.";
+          } else if (resp.status === 400) {
+            msg = "Validation error: Please check your input.";
+          } else if (resp.status === 403) {
+            msg = "Access Denied.";
+          } else if (resp.status === 503) {
+            msg = "Database error: Service temporarily unavailable.";
+          } else if (resp.status >= 500) {
+            msg = `Server error (${resp.status}): Internal server error.`;
+          } else {
+            msg = `Request failed with status ${resp.status}.`;
+          }
+        }
+        throw new Error(msg);
+      }
+
+      // Store auth
+      if (window.setAuth) {
+        window.setAuth(data.token, data.user);
+      } else {
+        localStorage.setItem("sky_auth_token", data.token);
+        localStorage.setItem("sky_auth_user", JSON.stringify(data.user));
+      }
+
+      showAlert("Sign-in successful! Redirecting...", true);
+      setTimeout(() => {
+        window.location.href = getRedirect();
+      }, 700);
+    } catch (err) {
+      console.error("Sign-in error:", err);
+      showAlert(err.message || "Invalid email or password.", false);
+    } finally {
+      btn.disabled = false;
+      btn.textContent = "SIGN IN";
+    }
+  });
+
+  // 2. Client Sign Up
+  formSignUp.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    clearAlert();
+
+    const name = formSignUp.name.value.trim();
+    const username = formSignUp.username.value.trim();
+    const email = formSignUp.email.value.trim();
+    const password = formSignUp.password.value;
+    const btn = formSignUp.querySelector("button[type='submit']");
+
+    if (!name || !email || !password) {
+      showAlert("Name, email, and password are required.", false);
+      return;
+    }
+
+    if (password.length < 6) {
+      showAlert("Password must be at least 6 characters.", false);
+      return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = "Creating account...";
+
+    const baseApi = window.API_BASE_URL || window.API_BASE || "http://localhost:5000/api";
+    const signupUrl = baseApi.endsWith("/") ? (baseApi + "auth/signup") : (baseApi + "/auth/signup");
+
+    try {
+      const resp = await (typeof window.apiFetch === 'function'
+        ? window.apiFetch("/auth/signup", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ name, username: username || "", email, password })
+          })
+        : fetch(signupUrl, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ name, username: username || "", email, password })
+          }));
+
+      const data = await parseJsonResponse(resp);
+      if (!resp.ok || !data.success) {
+        let msg = data.message;
+        if (!msg) {
+          if (resp.status === 400) {
+            msg = "Validation error: Please check your input.";
+          } else if (resp.status === 503) {
+            msg = "Database error: Service temporarily unavailable.";
+          } else if (resp.status >= 500) {
+            msg = `Server error (${resp.status}): Internal server error.`;
+          } else {
+            msg = `Request failed with status ${resp.status}.`;
+          }
+        }
+        throw new Error(msg);
+      }
+
+      // Store auth
+      if (window.setAuth) {
+        window.setAuth(data.token, data.user);
+      } else {
+        localStorage.setItem("sky_auth_token", data.token);
+        localStorage.setItem("sky_auth_user", JSON.stringify(data.user));
+      }
+
+      showAlert("Account created successfully! Redirecting...", true);
+      setTimeout(() => {
+        window.location.href = getRedirect();
+      }, 700);
+
+    } catch (err) {
+      console.error("Sign-up error:", err);
+      showAlert(err.message || "Could not create account.", false);
+    } finally {
+      btn.disabled = false;
+      btn.textContent = "SIGN UP";
+    }
+  });
 </script>
+
 </body>
 </html>

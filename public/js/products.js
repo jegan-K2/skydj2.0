@@ -1,6 +1,7 @@
 /* ==========================================================================
    products.js — Equipment Catalogue (Customer Side)
    Fetches equipment from Express REST API
+   Depends on api-config.js (window.apiFetch, window.resolveUploadUrl)
    ========================================================================== */
 
 let allProductsCache = [];
@@ -23,7 +24,9 @@ async function loadAllProducts(container) {
   `;
 
   try {
-    const resp = await fetch("/api/equipment");
+    const resp = await (typeof window.apiFetch === 'function'
+      ? window.apiFetch("/equipment")
+      : fetch((window.API_BASE_URL || window.API_BASE || "http://localhost:5000/api") + "/equipment"));
     const data = await resp.json();
 
     if (!data.success || !data.data || data.data.length === 0) {
@@ -80,7 +83,10 @@ function buildProductCard(p) {
   card.className = "card reveal revealed";
   card.style.cssText = "display:flex; flex-direction:column; justify-content:space-between;";
 
-  const imgSrc = p.imageUrl || "";
+  const rawImg = p.imageUrl || "";
+  const imgSrc = (typeof window.resolveUploadUrl === 'function')
+    ? window.resolveUploadUrl(rawImg)
+    : rawImg;
 
   card.innerHTML = `
     <div>

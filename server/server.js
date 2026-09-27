@@ -2,6 +2,11 @@
    Express Server — SKY DJ & EVENT MANAGEMENT
    ========================================================================== */
 
+const dns = require('dns');
+if (typeof dns.setDefaultResultOrder === 'function') {
+  dns.setDefaultResultOrder('ipv4first');
+}
+
 const path = require('path');
 require('dotenv').config({ path: path.join(__dirname, '../.env') });
 const express = require('express');
@@ -25,11 +30,53 @@ const reviewsUploadsDir = path.join(uploadsDir, 'reviews');
 
 const app = express();
 
+
 // CORS configuration
-app.use(cors({
-  origin: true,
-  credentials: true
-}));
+// Allowed origins:
+//   - Express itself (same-origin, no CORS header needed, but listed for clarity)
+//   - VS Code Live Server (port 5500 / 5501 on localhost or 127.0.0.1)
+//   - Vercel production (skydj.vercel.app — update if your Vercel domain changes)
+const ALLOWED_ORIGINS = [
+  'http://localhost:5000',
+  'http://127.0.0.1:5000',
+  'http://localhost:5500',
+  'http://127.0.0.1:5500',
+  'http://localhost:5501',
+  'http://127.0.0.1:5501',
+  'https://skydj.vercel.app',
+  'null',
+];
+
+const corsOptions = {
+  origin: function (origin, callback) {
+    // Allow requests with no Origin header (same-origin, Postman, curl, etc.)
+    // or requests from file:// protocol where browser sends Origin: 'null'
+    if (!origin || origin === 'null') return callback(null, true);
+
+    // Exact match in allowed origins list
+    if (ALLOWED_ORIGINS.includes(origin)) return callback(null, true);
+
+    // Allow any localhost or 127.0.0.1 dev port (e.g. 5500, 5501, 5502, 3000)
+    if (/^https?:\/\/(localhost|127\.0\.0\.1)(:[0-9]+)?$/.test(origin)) {
+      return callback(null, true);
+    }
+
+    // Allow Vercel deployments
+    if (/^https:\/\/[a-zA-Z0-9_-]+\.vercel\.app$/.test(origin)) {
+      return callback(null, true);
+    }
+
+    // Reject disallowed origins gracefully
+    callback(null, false);
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin'],
+};
+
+app.use(cors(corsOptions));
+app.options('*', cors(corsOptions));
+
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -85,11 +132,11 @@ app.use('/api', async (req, res, next) => {
   }
 });
 
-// API Routes
 app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api/equipment', require('./routes/equipmentRoutes'));
 app.use('/api/reviews', require('./routes/reviewRoutes'));
 app.use('/api/quotations', require('./routes/quotationRoutes'));
+app.use('/api/contact', require('./routes/contactRoutes'));
 
 // 404 handler for unknown API routes — never return index.html for API calls
 app.all('/api/*', (req, res) => {
@@ -114,6 +161,19 @@ app.use((err, req, res, next) => {
   });
 });
 
+// Specific page route aliases
+app.get('/admin-login', (req, res) => {
+  res.sendFile(path.join(__dirname, '../public/admin-login.html'));
+});
+
+app.get('/admin-dashboard', (req, res) => {
+  res.sendFile(path.join(__dirname, '../public/admin-dashboard.html'));
+});
+
+app.get('/client-login', (req, res) => {
+  res.sendFile(path.join(__dirname, '../public/login.html'));
+});
+
 // SPA fallback — serve index.html for any unmatched non-API route
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '../public/index.html'));
@@ -125,8 +185,22 @@ const PORT = process.env.PORT || 5000;
 if (require.main === module) {
   connectDB()
     .then(() => {
-      app.listen(PORT, () => {
+      const server = app.listen(PORT, () => {
+        console.log('=================================');
         console.log(`Server running on port ${PORT}`);
+        console.log(`- Localhost:    http://localhost:${PORT}`);
+        console.log(`- Local IPv4:   http://127.0.0.1:${PORT}`);
+        console.log(`- Health check: http://localhost:${PORT}/api/health`);
+        console.log('=================================');
+      });
+
+      server.on('error', (err) => {
+        if (err.code === 'EADDRINUSE') {
+          console.error(`Port ${PORT} is already in use by another process.`);
+        } else {
+          console.error('Server error:', err.message);
+        }
+        process.exit(1);
       });
     })
     .catch((err) => {

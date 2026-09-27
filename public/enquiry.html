@@ -26,11 +26,12 @@
       <nav class="nav-links">
         <a href="index.html" class="nav-link">HOME</a>
         <a href="products.html" class="nav-link">EQUIPMENT</a>
+        <a href="enquiry.html" class="nav-link active">GET A QUOTATION</a>
+        <a href="javascript:void(0)" class="nav-link contact-whatsapp-trigger" id="topNavContactBtn">CONTACT</a>
         <a href="login.html" class="nav-link nav-login-btn">LOGIN</a>
       </nav>
 
       <div class="nav-actions">
-        <a href="enquiry.html" class="btn btn-gold btn-sm">GET A QUOTATION</a>
         <button class="hamburger-btn" id="hamburgerBtn" aria-label="Toggle navigation">☰</button>
       </div>
     </div>
@@ -46,10 +47,9 @@
     <div class="mobile-nav-links">
       <a href="index.html" class="mobile-nav-link">HOME</a>
       <a href="products.html" class="mobile-nav-link">EQUIPMENT</a>
+      <a href="enquiry.html" class="mobile-nav-link active">GET A QUOTATION</a>
+      <a href="javascript:void(0)" class="mobile-nav-link contact-whatsapp-trigger" id="mobileNavContactBtn">CONTACT</a>
       <a href="login.html" class="mobile-nav-link mobile-nav-login-btn">LOGIN</a>
-      <div style="padding:16px;">
-        <a href="enquiry.html" class="btn btn-gold" style="width:100%;">GET A QUOTATION</a>
-      </div>
     </div>
   </div>
 
@@ -153,18 +153,12 @@
   </main>
 
   <footer class="site-footer">
-    <div class="container" style="text-align:center; padding:36px 20px;">
-      <img src="./images/logo.png" alt="SKY DJ Logo" style="width:48px; height:48px; border-radius:50%; margin:0 auto 12px auto; border:1px solid var(--gold-primary);">
-      <p class="brand-name-nav" style="margin-bottom:6px; color:#fff;">
-        <span class="sky-text">SKY</span> DJ &amp; EVENT MANAGEMENT
-      </p>
-      <p style="color:var(--gold-bright); font-size:0.85rem; margin-bottom:16px;">
-        DJ • Sound • Lighting • Stage • Events
-      </p>
-      <div style="display:flex; justify-content:center; gap:20px; font-size:0.88rem; margin-bottom:16px;">
+    <div class="container" style="text-align:center; padding:28px 20px;">
+      <div style="display:flex; justify-content:center; flex-wrap:wrap; gap:20px; font-size:0.88rem; margin-bottom:16px;">
         <a href="index.html" style="color:var(--text-muted);">Home</a>
         <a href="products.html" style="color:var(--text-muted);">Equipment</a>
         <a href="enquiry.html" style="color:var(--text-muted);">Get a Quotation</a>
+        <a href="javascript:void(0)" class="contact-whatsapp-trigger" style="color:var(--text-muted);">Contact</a>
         <a href="login.html" style="color:var(--text-muted);">Login</a>
       </div>
       <div style="color:var(--text-dim); font-size:0.8rem; border-top:1px solid var(--black-border); padding-top:14px;">
@@ -173,6 +167,7 @@
     </div>
   </footer>
 
+  <script src="./js/api-config.js"></script>
   <script src="./js/app.js"></script>
   <script>
     // Pre-fill from URL query param (e.g. ?item=JBL+Speakers)
@@ -214,20 +209,35 @@
         btn.textContent = "Submitting Quotation Request...";
 
         try {
-          const resp = await fetch("/api/quotations", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              name,
-              phone,
-              email: email || "",
-              functionType,
-              eventDate: functionDate,
-              location,
-              requiredEquipment: requiredEquipment || "",
-              message: message || ""
-            })
-          });
+          const resp = await (typeof window.apiFetch === 'function'
+            ? window.apiFetch("/quotations", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                  name,
+                  phone,
+                  email: email || "",
+                  functionType,
+                  eventDate: functionDate,
+                  location,
+                  requiredEquipment: requiredEquipment || "",
+                  message: message || ""
+                })
+              })
+            : fetch((window.API_BASE_URL || window.API_BASE || "http://localhost:5000/api") + "/quotations", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                  name,
+                  phone,
+                  email: email || "",
+                  functionType,
+                  eventDate: functionDate,
+                  location,
+                  requiredEquipment: requiredEquipment || "",
+                  message: message || ""
+                })
+              }));
 
           const data = await resp.json();
           if (!data.success) throw new Error(data.message || "Submission failed.");

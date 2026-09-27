@@ -6,6 +6,7 @@
   "scripts": {
     "start": "node server/server.js",
     "dev": "node server/server.js",
+    "live": "npx live-server public --port=5500 --host=127.0.0.1 --no-browser",
     "seed": "node server/seedAdmin.js"
   },
   "keywords": [

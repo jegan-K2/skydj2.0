@@ -147,18 +147,16 @@
     </form>
 
     <!-- Footer Links -->
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 24px; padding-top: 18px; border-top: 1px solid var(--black-border); font-size: 0.85rem;">
-      <a href="login.html" style="color: var(--gold-primary);">
-        ← Choose Role
-      </a>
-      <a href="index.html" style="color: var(--text-muted);">
-        Return to Website
+    <div style="text-align: center; margin-top: 24px; padding-top: 18px; border-top: 1px solid var(--black-border); font-size: 0.88rem;">
+      <a href="index.html" style="color: var(--gold-primary); text-decoration: none;">
+        ← Back to Homepage
       </a>
     </div>
 
   </div>
 </div>
 
+<script src="./js/api-config.js"></script>
 <script src="./js/app.js"></script>
 <script>
   const tabSignIn = document.getElementById("tabSignInBtn");
@@ -196,7 +194,11 @@
 
   function getRedirect() {
     const params = new URLSearchParams(window.location.search);
-    return params.get("redirect") || "index.html";
+    const redirect = params.get("redirect") || "index.html";
+    if (/^(https?:|\/\/)/i.test(redirect)) {
+      return "index.html";
+    }
+    return redirect;
   }
 
   async function parseJsonResponse(resp) {
@@ -204,6 +206,12 @@
     try {
       return JSON.parse(text);
     } catch (e) {
+      if (resp.status === 503) {
+        throw new Error("Database error: Server returned 503 Service Unavailable.");
+      }
+      if (resp.status >= 500) {
+        throw new Error(`Server error (${resp.status}): An internal server error occurred.`);
+      }
       throw new Error("Server returned an unexpected response. Please try again.");
     }
   }
@@ -217,18 +225,54 @@
     const password = formSignIn.password.value;
     const btn = formSignIn.querySelector("button[type='submit']");
 
+    if (!email || !password) {
+      showAlert("Email and password are required.", false);
+      return;
+    }
+
     btn.disabled = true;
     btn.textContent = "Signing in...";
 
+    const baseApi = window.API_BASE_URL || window.API_BASE || "http://localhost:5000/api";
+    const loginUrl = baseApi.endsWith("/") ? (baseApi + "auth/login") : (baseApi + "/auth/login");
+
+    console.log("Current page:", window.location.href);
+    console.log("API Base URL:", window.API_BASE_URL);
+    console.log("Login API URL:", loginUrl);
+
     try {
-      const resp = await fetch("/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password })
-      });
+      const resp = await (typeof window.apiFetch === 'function'
+        ? window.apiFetch("/auth/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email, password })
+          })
+        : fetch(loginUrl, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email, password })
+          }));
+
+      console.log("Response status:", resp.status);
 
       const data = await parseJsonResponse(resp);
-      if (!data.success) throw new Error(data.message || "Invalid email or password.");
+      if (!resp.ok || !data.success) {
+        let msg = data.message;
+        if (!msg) {
+          if (resp.status === 401) {
+            msg = "Invalid email or password.";
+          } else if (resp.status === 400) {
+            msg = "Validation error: Please check your input.";
+          } else if (resp.status === 503) {
+            msg = "Database error: Service temporarily unavailable.";
+          } else if (resp.status >= 500) {
+            msg = `Server error (${resp.status}): Internal server error.`;
+          } else {
+            msg = `Request failed with status ${resp.status}.`;
+          }
+        }
+        throw new Error(msg);
+      }
 
       // Store auth
       if (window.setAuth) {
@@ -263,22 +307,56 @@
     const btn = formSignUp.querySelector("button[type='submit']");
 
     if (!name || !email || !password) {
-      showAlert("Please enter all required fields.", false);
+      showAlert("Name, email, and password are required.", false);
+      return;
+    }
+
+    if (password.length < 6) {
+      showAlert("Password must be at least 6 characters.", false);
       return;
     }
 
     btn.disabled = true;
     btn.textContent = "Creating account...";
 
+    const baseApi = window.API_BASE_URL || window.API_BASE || "http://localhost:5000/api";
+    const signupUrl = baseApi.endsWith("/") ? (baseApi + "auth/signup") : (baseApi + "/auth/signup");
+
+    console.log("Current page:", window.location.href);
+    console.log("API Base URL:", window.API_BASE_URL);
+    console.log("Signup API URL:", signupUrl);
+
     try {
-      const resp = await fetch("/api/auth/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, username: username || "", email, password })
-      });
+      const resp = await (typeof window.apiFetch === 'function'
+        ? window.apiFetch("/auth/signup", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ name, username: username || "", email, password })
+          })
+        : fetch(signupUrl, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ name, username: username || "", email, password })
+          }));
+
+      console.log("Response status:", resp.status);
 
       const data = await parseJsonResponse(resp);
-      if (!data.success) throw new Error(data.message || "Could not create account.");
+      if (!resp.ok || !data.success) {
+        let msg = data.message;
+        if (!msg) {
+          if (resp.status === 400) {
+            msg = "Validation error: Please check your input.";
+          } else if (resp.status === 503) {
+            msg = "Database error: Service temporarily unavailable.";
+          } else if (resp.status >= 500) {
+            msg = `Server error (${resp.status}): Internal server error.`;
+          } else {
+            msg = `Request failed with status ${resp.status}.`;
+          }
+        }
+        throw new Error(msg);
+      }
 
       // Store auth
       if (window.setAuth) {
