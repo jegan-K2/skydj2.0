@@ -14,19 +14,22 @@ const cors = require('cors');
 const fs = require('fs');
 const connectDB = require('./config/db');
 
-// Ensure uploads directories exist
+// Ensure uploads directories exist in persistent local environments
+const isServerless = Boolean(process.env.VERCEL || process.env.VERCEL_ENV || process.env.AWS_LAMBDA_FUNCTION_NAME);
 const uploadsDir = path.join(__dirname, '../uploads');
-const equipmentUploadsDir = path.join(uploadsDir, 'equipment');
-const reviewsUploadsDir = path.join(uploadsDir, 'reviews');
-[uploadsDir, equipmentUploadsDir, reviewsUploadsDir].forEach((dir) => {
-  try {
-    if (!fs.existsSync(dir)) {
-      fs.mkdirSync(dir, { recursive: true });
+if (!isServerless) {
+  const equipmentUploadsDir = path.join(uploadsDir, 'equipment');
+  const reviewsUploadsDir = path.join(uploadsDir, 'reviews');
+  [uploadsDir, equipmentUploadsDir, reviewsUploadsDir].forEach((dir) => {
+    try {
+      if (!fs.existsSync(dir)) {
+        fs.mkdirSync(dir, { recursive: true });
+      }
+    } catch (err) {
+      // Ignored
     }
-  } catch (err) {
-    // Ignored in read-only serverless filesystems
-  }
-});
+  });
+}
 
 const app = express();
 

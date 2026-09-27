@@ -11,29 +11,13 @@ const { getApproved, getAll, create, approve, reject, remove } = require('../con
 const authMiddleware = require('../middleware/authMiddleware');
 const adminMiddleware = require('../middleware/adminMiddleware');
 
-// Multer config for review event photos
-const reviewStorageDir = path.join(__dirname, '../../uploads/reviews');
-try {
-  if (!fs.existsSync(reviewStorageDir)) {
-    fs.mkdirSync(reviewStorageDir, { recursive: true });
-  }
-} catch (err) {
-  // Ignored in read-only serverless filesystems
-}
-
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, reviewStorageDir);
-  },
-  filename: (req, file, cb) => {
-    const uniqueName = `review_${Date.now()}_${Math.round(Math.random() * 1e6)}${path.extname(file.originalname)}`;
-    cb(null, uniqueName);
-  }
-});
+// Multer in-memory storage:
+// Keeps review file buffer in memory and avoids any local /var/task filesystem access on Vercel
+const storage = multer.memoryStorage();
 
 const fileFilter = (req, file, cb) => {
   const allowed = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
-  if (allowed.includes(file.mimetype.toLowerCase())) {
+  if (file && file.mimetype && allowed.includes(file.mimetype.toLowerCase())) {
     cb(null, true);
   } else {
     cb(new Error('Only JPG, JPEG, PNG, and WEBP images are allowed.'), false);
